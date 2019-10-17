@@ -15,4 +15,6 @@ pip install -r $PRJ_ROOT/requirements.txt
 
 # --- PYTHONPATH environment variable
 echo "Adding PYTHONPATH to ~/.bashrc"
-python $PARENT_DIR/set_pythonpath.py
+python $PRJ_ROOT/scripts/set_pythonpath.py linux
+
+# --- Git hooks
