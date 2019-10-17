@@ -11,7 +11,6 @@ from flask import make_response
 import os
 import sys
 myFolder = os.path.dirname(os.path.realpath(__file__))
-sys.path.insert(0, "./../api/")
 
 # import all Apis
 
