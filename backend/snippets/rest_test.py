@@ -1,31 +1,39 @@
 #!flask/bin/python
+from swagger_client.api.bookings_api import BookingsApi
+from swagger_client.api.defaults_api import DefaultsApi
+from swagger_client.api.environments_api import EnvironmentsApi
+from swagger_client.api.vehicles_api import VehiclesApi
+from swagger_client.api_client import ApiClient
 from flask import Flask, jsonify
 from flask import make_response
 
-from api_template import get_env
+# set sys path to import swagger client
+import os
+import sys
+myFolder = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, "./../api/")
 
+# import all Apis
+
+# our Api key
+API_KEY = "07fb13b8-176a-4c9d-bfe6-9831271e3fac"
+
+# init api client
+client = ApiClient()
+environment = EnvironmentsApi(client)
+vehicles = VehiclesApi(client)
 
 app = Flask(__name__)
-
-tasks = [
-    {
-        'id': 1,
-        'title': u'Buy groceries',
-        'description': u'Milk, Cheese, Pizza, Fruit, Tylenol',
-        'done': False
-    },
-    {
-        'id': 2,
-        'title': u'Learn Python',
-        'description': u'Need to find a good Python tutorial on the web',
-        'done': False
-    }
-]
 
 
 @app.route('/environment', methods=['GET'])
 def get_tasks():
-    return str(get_env())
+    return str(environment.api_v2_environments_get(API_KEY))
+
+
+@app.route('api/v2/vehicles', methods=['GET'])
+def get_all_vehicles():
+    return vehicles.api_v2_vehicles_get
 
 
 @app.errorhandler(404)
