@@ -27,7 +27,7 @@ def run_target_install(platform, ext):
         subprocess.call(["bash", get_scripts_dir() /
                          get_platform().lower() / str(_TARGET_INSTALL + ext), get_prj_root()])
     elif platform == "windows":
-        subprocess.call(["bash", get_scripts_dir() /
+        subprocess.call(["start", get_scripts_dir() /
                          get_platform().lower() / str(_TARGET_INSTALL + ext), get_prj_root()])
     elif platform == "mac":
         raise NotImplementedError(
