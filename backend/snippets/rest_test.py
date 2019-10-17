@@ -2,7 +2,7 @@
 from flask import Flask, jsonify
 from flask import make_response
 
-from swagger_client.api_template import get_env
+from api_template import get_env
 
 
 app = Flask(__name__)
