@@ -4,8 +4,8 @@ import sys
 from flask import Flask, jsonify
 from flask import make_response
 
-from swagger_client.api.bookings_api import BookingsApi
-from swagger_client.api.defaults_api import DefaultsApi
+from backend.api.swagger_client.api.bookings_api import BookingsApi
+from backend.api.swagger_client.api.defaults_api import DefaultsApi
 from swagger_client.api.environments_api import EnvironmentsApi
 from swagger_client.api.vehicles_api import VehiclesApi
 from swagger_client.api_client import ApiClient
