@@ -1,6 +1,6 @@
 #!flask/bin/python
 from flask import Flask, jsonify
-from api_template import get_env
+from backend.api.swagger_client.api_template import get_env
 
 app = Flask(__name__)
 
