@@ -1,4 +1,7 @@
-#!flask/bin/python
+import os
+import sys
+
+
 from backend.api.swagger_client.api.bookings_api import BookingsApi
 from backend.api.swagger_client.api.defaults_api import DefaultsApi
 from backend.api.swagger_client.api.environments_api import EnvironmentsApi
@@ -7,14 +10,9 @@ from backend.api.swagger_client.api_client import ApiClient
 from flask import Flask, jsonify
 from flask import make_response
 
-# set sys path to import swagger client
-import os
-import sys
-myFolder = os.path.dirname(os.path.realpath(__file__))
+from backend.api import handler
 
-# import all Apis
-
-# our Api key
+# API key
 API_KEY = "07fb13b8-176a-4c9d-bfe6-9831271e3fac"
 
 # init api client
@@ -26,18 +24,18 @@ app = Flask(__name__)
 
 
 @app.route("/")
-def test():
-    print("Hello World")
+def print_app_info():
+    return "This is the fleet monitor app"
 
 
-@app.route("/environment/api_key", methods=["GET"])
-def get_tasks():
-    return str(environment.api_v2_environments_get(API_KEY))
+@app.route("/booking_price", methods=["GET"])
+def booking_price(start_time, end_time, user_id):
+    return handler.handle_booking_price(start_time, end_time, user_id)
 
 
-@app.route("/api/v2/vehicles", methods=["GET"])
-def get_all_vehicles():
-    return vehicles.api_v2_vehicles_get
+@app.route("/book_vehicle", methods=["POST"])
+def book_vehicle(start_time, end_time, user_id):
+    return handler.handle_book_vehicle(start_time, end_time, user_id)
 
 
 @app.errorhandler(404)
