@@ -7,3 +7,4 @@ rope
 pylint
 urllib3
 certifi
+requests
