@@ -20,14 +20,12 @@ packages = [
 
 home_dir = Path.home()
 
-if platform == "linux":
-    path_bashrc = home_dir / ".bashrc"
-    pythonpath = "export PYTHONPATH=\"$PYTHONPATH"
-    for p in packages:
-        pythonpath += ":" + str(p)
-    pythonpath += "\""
 
-    with open(path_bashrc, "a") as f:
-        f.write("\n" + pythonpath)
-elif platform == "windows":
-    pass
+path_bashrc = home_dir / ".bashrc"
+pythonpath = "export PYTHONPATH=\"$PYTHONPATH"
+for p in packages:
+    pythonpath += ":" + str(p)
+pythonpath += "\""
+
+with open(path_bashrc, "a") as f:
+    f.write("\n" + pythonpath)
