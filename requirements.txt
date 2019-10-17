@@ -5,3 +5,5 @@ flask-restful
 autopep8
 rope
 pylint
+urllib3
+certifi
