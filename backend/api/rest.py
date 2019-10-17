@@ -25,7 +25,11 @@ vehicles = VehiclesApi(client)
 app = Flask(__name__)
 
 
-@app.route("")
+@app.route("/")
+def test():
+    print("Hello World")
+
+
 @app.route("/environment/api_key", methods=["GET"])
 def get_tasks():
     return str(environment.api_v2_environments_get(API_KEY))
