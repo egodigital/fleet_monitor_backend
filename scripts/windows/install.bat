@@ -14,12 +14,6 @@
 :: pip install -r %PRJ_ROOT%\requirements.txt
 
 :: # --- PYTHONPATH environment variable
-SET PRJ_ROOT=%~dp0
+set PRJ_ROOT=%~dp0
 echo %PRJ_ROOT%
-set PYTHONPATH=%PYTHONPATH%;^
-    %PRJ_ROOT%\backend;^
-    %PRJ_ROOT%\backend\api;^
-    %PRJ_ROOT%\backend\api\swagger_client;^
-    %PRJ_ROOT%\backend\api\swagger_client\api;^
-    %PRJ_ROOT%\backend\api\swagger_client\models;^
-    %PRJ_ROOT%\backend\snippets;^
+set PYTHONPATH=%PYTHONPATH%;%PRJ_ROOT%\backend;%PRJ_ROOT%\backend\api;%PRJ_ROOT%\backend\api\swagger_client;%PRJ_ROOT%\backend\api\swagger_client\api;%PRJ_ROOT%\backend\api\swagger_client\models;%PRJ_ROOT%\backend\snippets; ^

@@ -1,7 +1,7 @@
 #set sys path to import swagger client
 import os, sys
 myFolder = os.path.dirname(os.path.realpath(__file__))
-sys.path.insert(0, "./backend/api/")
+# sys.path.insert(0, "./backend/api/")
 
 #import all Apis
 from swagger_client.api_client import ApiClient
