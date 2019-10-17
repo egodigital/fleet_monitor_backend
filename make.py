@@ -27,8 +27,13 @@ def run_target_install(platform, ext):
         subprocess.call(["bash", get_scripts_dir() /
                          get_platform().lower() / str(_TARGET_INSTALL + ext), get_prj_root()])
     elif platform == "windows":
-        subprocess.call(["start", get_scripts_dir() /
-                         get_platform().lower() / str(_TARGET_INSTALL + ext), get_prj_root()])
+        # TODO: Make this work
+        # subprocess.call(["start", get_scripts_dir() /
+        #                  get_platform().lower() / str
+        #                  (_TARGET_INSTALL + ext), get_prj_root()
+        #                  ])
+        raise NotImplementedError(
+            "TODO: Implement installation creation for Windows")
     elif platform == "mac":
         raise NotImplementedError(
             "TODO: Implement installation creation for Mac")
