@@ -14,6 +14,8 @@ packages = [
     prj_root / "backend" / "api" / "swagger_client",
     prj_root / "backend" / "api" / "swagger_client" / "api",
     prj_root / "backend" / "api" / "swagger_client" / "models",
+    prj_root / "backend" / "snippets",
+    prj_root / "backend" / "core",
 ]
 
 home_dir = Path.home()

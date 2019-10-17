@@ -22,3 +22,4 @@ set PYTHONPATH=%PYTHONPATH%;
 %PRJ_ROOT%\backend\api\swagger_client\api;^
 %PRJ_ROOT%\backend\api\swagger_client\models;^
 %PRJ_ROOT%\backend\snippets;
+%PRJ_ROOT%\backend\core;
