@@ -25,20 +25,25 @@ vehicles = VehiclesApi(client)
 app = Flask(__name__)
 
 
-@app.route('/environment', methods=['GET'])
+@app.route("/")
+def test():
+    print("Hello World")
+
+
+@app.route("/environment/api_key", methods=["GET"])
 def get_tasks():
     return str(environment.api_v2_environments_get(API_KEY))
 
 
-@app.route('api/v2/vehicles', methods=['GET'])
+@app.route("/api/v2/vehicles", methods=["GET"])
 def get_all_vehicles():
     return vehicles.api_v2_vehicles_get
 
 
 @app.errorhandler(404)
 def not_found(error):
-    return make_response(jsonify({'error': 'Not found'}), 404)
+    return make_response(jsonify({"error": "Not found"}), 404)
 
 
-if __name__ == '__main__':
-    app.run(debug=True, port=80)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
