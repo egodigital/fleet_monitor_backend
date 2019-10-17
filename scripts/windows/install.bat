@@ -1,4 +1,4 @@
-# --- Virtual Python environment
+:: # --- Virtual Python environment
 :: echo "Installing project dependendencies into virtual Python environment."
 :: set PYTHON_VERSION=3.6
 :: set PRJ_ROOT=%1
