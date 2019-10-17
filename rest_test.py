@@ -1,10 +1,10 @@
 # import swagger clients
 from flask import Flask, jsonify, make_response
 from backend.api.swagger_client.api_client import ApiClient
-from swagger_client.api.vehicles_api import VehiclesApi
-from swagger_client.api.environments_api import EnvironmentsApi
-from swagger_client.api.defaults_api import DefaultsApi
-from swagger_client.api.bookings_api import BookingsApi
+from backend.api.swagger_client.api.vehicles_api import VehiclesApi
+from backend.api.swagger_client.api.environments_api import EnvironmentsApi
+from backend.api.swagger_client.api.defaults_api import DefaultsApi
+from backend.api.swagger_client.api.bookings_api import BookingsApi
 
 # our Api key
 API_KEY = "07fb13b8-176a-4c9d-bfe6-9831271e3fac"
@@ -25,7 +25,7 @@ def get_tasks():
     return str(environments.api_v2_environments_get(API_KEY))
 
 # return a list of all vehicles
-@app.route('api/v2/vehicles', methods=['GET'])
+@app.route('/api/v2/vehicles', methods=['GET'])
 def get_all_vehicles():
     return vehicles.api_v2_vehicles_get(API_KEY)
 
@@ -41,4 +41,4 @@ def not_found(error):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=80)
+    app.run(debug=True)
