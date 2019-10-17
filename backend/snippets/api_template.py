@@ -1,7 +1,7 @@
 #set sys path to import swagger client
 import os, sys
 myFolder = os.path.dirname(os.path.realpath(__file__))
-# sys.path.insert(0, "./backend/api/")
+sys.path.insert(0, "./../api/")
 
 #import all Apis
 from swagger_client.api_client import ApiClient
@@ -22,3 +22,6 @@ curr_environment = environment.api_v2_environments_get(API_KEY)
 
 #print res
 print(curr_environment)
+
+def get_env():
+    return curr_environment
