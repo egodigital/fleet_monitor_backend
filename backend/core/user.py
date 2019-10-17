@@ -14,6 +14,7 @@ class User:
         self.name = name
         self.phone_number = phone_number
         self.credentials = Credentials(user_id, password)
+        self.tags = []
 
     def set_phone_number(self, phone_number):
         self.phone_number = phone_number
@@ -23,3 +24,15 @@ class User:
 
     def set_password(self, password):
         self.credentials.password = password
+
+    def add_tag(self, tag):
+        if not (tag in self.tags):
+            self.tags.append(tag)
+            return True
+        return False
+
+    def remove_tag(self, tag):
+        if tag in self.tags:
+            self.tags.remove(tag)
+            return True
+        return False
