@@ -21,12 +21,14 @@ def print_help():
     print(f"Targets: {', '.join(_TARGETS)}.")
     print(f"### {'install':20} | No options.")
 
+
 def run_target_install(platform, ext):
     if platform == "linux":
         subprocess.call(["bash", get_scripts_dir() /
                          get_platform().lower() / str(_TARGET_INSTALL + ext), get_prj_root()])
     elif platform == "windows":
-        raise NotImplementedError("TODO: Implement installation for Windows")
+        subprocess.call(["bash", get_scripts_dir() /
+                         get_platform().lower() / str(_TARGET_INSTALL + ext), get_prj_root()])
     elif platform == "mac":
         raise NotImplementedError(
             "TODO: Implement installation creation for Mac")
