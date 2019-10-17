@@ -3,11 +3,11 @@ from pathlib import Path
 import subprocess
 import sys
 
-from tpvautopack.definitions import get_docs_dir
-from tpvautopack.definitions import get_platform
-from tpvautopack.definitions import get_prj_root
-from tpvautopack.definitions import get_scripts_dir
-from tpvautopack.definitions import get_os_native_script_file_extensions
+from backend.definitions import get_docs_dir
+from backend.definitions import get_platform
+from backend.definitions import get_prj_root
+from backend.definitions import get_scripts_dir
+from backend.definitions import get_os_native_script_file_extensions
 
 
 _TARGET_INSTALL = "install"
