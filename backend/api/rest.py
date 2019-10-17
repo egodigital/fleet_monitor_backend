@@ -7,8 +7,10 @@ from backend.api.swagger_client.api.defaults_api import DefaultsApi
 from backend.api.swagger_client.api.environments_api import EnvironmentsApi
 from backend.api.swagger_client.api.vehicles_api import VehiclesApi
 from backend.api.swagger_client.api_client import ApiClient
+
 from flask import Flask, jsonify
 from flask import make_response
+from flask import request
 
 from backend.api import handler
 
@@ -25,17 +27,19 @@ app = Flask(__name__)
 
 @app.route("/")
 def print_app_info():
-    return "This is the fleet monitor app"
+    return jsonify({"about": "This is the fleet monitor app"})
 
 
-@app.route("/booking_price", methods=["GET"])
-def booking_price(start_time, end_time, user_id):
-    return handler.handle_booking_price(start_time, end_time, user_id)
+@app.route("/booking_price", methods=["POST"])
+def booking_price():
+    data = request.data
+    return handler.handle_booking_price(data["start_time"], data["end_time"], data["user_id"])
 
 
 @app.route("/book_vehicle", methods=["POST"])
 def book_vehicle(start_time, end_time, user_id):
-    return handler.handle_book_vehicle(start_time, end_time, user_id)
+    data = request.data
+    return handler.handle_book_vehicle(data["start_time"], data["end_time"], data["user_id"])
 
 
 @app.errorhandler(404)
