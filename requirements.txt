@@ -1,0 +1,7 @@
+flask
+flask-jsonpify
+flask-sqlalchemy
+flask-restful
+autopep8
+rope
+pylint
