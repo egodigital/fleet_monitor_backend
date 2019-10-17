@@ -6,25 +6,28 @@ from typing import List
 from .user import User
 
 
-class ReservationSettings:
+class BookingSettings:
     """
-    Class encapsulates further reservation settings.
+    Class encapsulates further booking settings.
     """
 
-    def __init__(self, allow_car_pooling: bool = True) -> None:
+    def __init__(self, start_time: str, end_time: str,
+                 distance: int, parking_duration: int, user:
+                 User, allow_car_pooling: bool = True) -> None:
+        self.start_time = start_time
+        self.end_time = end_time
+        self.distance = distance
+        self.parking_duration = parking_duration
+        self.user = User
         self.allow_car_pooling = allow_car_pooling
 
 
-class Reservation:
+class Booking:
     """
-    Class abstracts a car reservation.
+    Class abstracts a car booking.
     """
 
-    def __init__(self, start_time: datetime, end_time: datetime,
-                 user: User, settings: ReservationSettings) -> None:
-        self.start_time = start_time
-        self.end_time = end_time
-        self.user = user
+    def __init__(self, settings: BookingSettings) -> None:
         self.settings = settings
 
     def __str__(self):
@@ -32,32 +35,32 @@ class Reservation:
         pass
 
 
-class ReservationSystem:
+class BookingSystem:
     """
     Class which manages all reservations.
     """
 
     def __init__(self):
-        self.__reservations = {}
+        self.__bookings = {}
 
-    def add_reservation(self, start_time: datetime, end_time:
-                        datetime, user: User, settings: ReservationSettings) -> bool:
-        reservation = Reservation(start_time, end_time, user, settings)
+    def add_booking(self, start_time: datetime, end_time:
+                    datetime, user: User, settings: BookingSettings) -> bool:
+        booking = Booking(settings)
         id_ = id_ = str(uuid.uuid1())
-        self.__reservations[id_] = reservation
+        self.__bookings[id_] = booking
         # Everything worked fine
         return True
 
-    def delete_reservation(self, id_: str) -> bool:
-        del self.__reservations[id_]
+    def delete_booking(self, id_: str) -> bool:
+        del self.__bookings[id_]
         return True
 
-    def get_reservation_by_user(self, username):
-        user_reservations = []
-        for _, v in self.__reservations.items():
-            if v.user.name == username:
-                user_reservations.append(v)
-        return user_reservations
+    def get_bookings_of_user(self, user_id: str) -> None:
+        user_bookings = []
+        for _, v in self.__bookings.items():
+            if v.user.credentials.uer_id == user_id:
+                user_bookings.append(v)
+        return user_bookings
 
-    def get_all_reservations(self) -> List[Reservation]:
-        return self.__reservations.values()
+    def get_all_bookings(self) -> List[Booking]:
+        return self.__bookings.values()
