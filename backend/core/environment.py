@@ -1,11 +1,17 @@
 from typing import List
 
 from backend.definitions import get_prj_root
+from backend.utils import timeutil
 
 from .bookings import Booking
 from .bookings import BookingSystem
 from .car import Car
+from datetime import datetime
+from .globals import BOOKING_BASE_PRICE
+from .globals import COST_PER_KILOMETER
+from .globals import LATE_RETURN_MAX_PENALTY
 from .globals import LONELY_WOLF_THRESHOLD
+from .globals import PENALTY_LATE_CAR_RETURN
 from .user import User
 
 
@@ -114,7 +120,7 @@ class Environment:
         # Availability depends on the fact
         return True
 
-    def _estimate_price(self, new_booking: Booking, all_bookings: List[Booking]) -> float:
+    def _get_price(self, new_booking: Booking, all_bookings: List[Booking]) -> float:
         return 1
 
     def _update_preferences_and_nature(self, user_id: str) -> bool:
@@ -150,14 +156,32 @@ class Environment:
                 Booking(start_time, end_time, distance,
                         user_id, allow_car_pooling)
             )
-            price = self._estimate_price(new_booking, all_bookings)
+            price = self._get_price(new_booking, all_bookings)
             user_status_updated =
             self._update_preferences_and_nature(
                 user_id)
             return id_, price, user_status_updated
         return None, -1, False
 
-    def delete_booking(self, booking_id) -> None:
+    def close_booking(self, booking_id: str, handover_time: str):
+        booking_system.close_booking(booking_id)
+        booking: Booking = self.booking_system.get_booking_by_id(booking_id)
+        handover_time = datetime(handover_time)
+        end_time = booking.end_time
+        minutes_late = timeutil.time_slots_to_minutes(
+            timeutil.datetimes_to_time_slots(
+                handover_time - end_time
+            ))
+        if minutes_late > 0:
+            booking.set_minutes_late(minutes_late)
+            keys = PENALTY_LATE_CAR_RETURN.keys()
+            for i in range(keys) - 1:
+                if minutes_late > keys[i] and minutes_late < keys[i+1]:
+                    booking.add_cost(PENALTY_LATE_CAR_RETURN[keys[i]])
+                    break
+        self.booking_system.close_booking(booking_id)
+
+    def delete_booking(self, booking_id: str) -> None:
         self.booking_system.delete_booking(booking_id)
 
     def add_tag_to_booking(self, booking_id, tag):
