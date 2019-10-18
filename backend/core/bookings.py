@@ -73,7 +73,7 @@ class BookingSystem:
         return id_
 
     def close_booking(self, booking_id):
-        self.__bookings[booking_id].closed = True
+        booking = self.__bookings[booking_id]
 
     def delete_booking(self, id_: str) -> None:
         del self.__bookings[id_]
