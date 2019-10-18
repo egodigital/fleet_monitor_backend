@@ -13,6 +13,10 @@ def booking_time_slots_to_minutes(amount: int) -> int:
     return amount * SMALLEST_TIME_UNIT
 
 
+def seconds_to_minutes(amount: int) -> int:
+    return round(amount * SECOND_TO_MINUTE_FACTOR)
+
+
 def minutes_to_hours(amount: int) -> float:
     return amount * MINUTE_TO_HOUR_FACTOR
 
