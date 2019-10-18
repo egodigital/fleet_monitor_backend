@@ -1,5 +1,8 @@
+from backend.api import rest
+
+
 def run():
-    pass
+    rest.run()
 
 
 def main():
