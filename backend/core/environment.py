@@ -9,6 +9,7 @@ from .bookings import BookingSystem
 from .car import Car
 from datetime import datetime
 from .globals import BASE_PRICE
+from .globals import BATTERY_CONSERVATIVE_FACTOR
 from .globals import LATE_RETURN_FEE
 from .globals import LATE_RETURN_FEE_MAX
 from .globals import LOOK_AHEAD_TIME_SLOTS
@@ -52,7 +53,7 @@ class Environment:
         for i in indices:
             time_slots[i] = 0
 
-    def _time_slot_free(self, license_: str, t1: datetime, t2: datetime) -> None:
+    def _time_slot_free(self: license_: str, t1: datetime, t2: datetime) -> None:
         indices = self._get_indices(t1, t2)
         time_slots = self.cars_to_timeslots[license_]
         # Safety padding
@@ -60,7 +61,6 @@ class Environment:
         #       before and after the booking
         if time_slots[indices[0] - 1] == 1:
             return False
-
         if time_slots[indices[len(indices) - 1] + 1] == 1:
             return False
 
@@ -69,8 +69,29 @@ class Environment:
                 return False
         return True
 
+    def _enough_charge(self, license_: str, t1: datetime, distance: float) -> bool:
+        prior_bookings: List[Booking] = self._get_prior_bookings_of_car(
+            license_, t1)
+        car = self.cars[self._find_car(license_)]
+        sum_distance = sum(b.distance for b in prior_bookings)
+        estimate_left_range = car.range - sum_distance
+        if estimate_left_range * (1 + BATTERY_CONSERVATIVE_FACTOR) < distance:
+            return False
+        return True
+
+    def _time_slot_available(self, license_: str, t1: datetime, t2: datetime, distance: float) -> None:
+        # A time slot is available if it is free
+        # and if the car has enough charge by a
+        # conservative estimate
+        bool available = self._time_slot_free(license_, t1, t2) and self._enough_charge(license_, t1, distance)
+
     def _get_prior_bookings_of_car(self, license_: str, t1: datetime) -> List[Booking]:
-        idx = self._find_car(license_)
+        bookings = self.booking_system.get_bookings_by_license(license_)
+        prior_bookings = []
+        for b in bookings:
+            if b.start_time < t1:
+                prior_bookings.append(b)
+        return prior_bookings
 
     def _find_booking(self, booking_id: str) -> Booking:
         return self.booking_system.get_booking(booking_id)
@@ -87,7 +108,7 @@ class Environment:
         for i in indices:
             car = self.cars[i]
             license_ = self.cars[i].license
-            if self._time_slot_free(license_, start_time, end_time):
+            if self._time_slot_available(license_, start_time, end_time, distance):
                 return car
         return None
 
