@@ -19,6 +19,8 @@ class Booking:
         self.start_time = datetime(start_time)
         self.end_time = datetime(end_time)
         self.distance = distance
+        # TODO: Implement carpooling such that more than
+        # one user can be assigned to a booking
         self.user_id = user_id
         self.license = license_
         self.allow_car_pooling = allow_car_pooling
