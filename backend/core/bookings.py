@@ -59,6 +59,7 @@ class BookingSystem:
         return id_
 
     def close_booking(self, booking_id: str, handover_time: str):
+        # TODO: Finish implementation
         booking = self.__bookings[booking_id]
         end_time = booking.end_time
         handover_time = datetime(handover_time)
