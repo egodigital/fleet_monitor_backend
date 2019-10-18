@@ -1,7 +1,7 @@
 from datetime import datetime
 import math
 
-from .assumptions import SMALLEST_TIME_UNIT
+from .globals import SMALLEST_TIME_UNIT
 
 DAY_TO_MINUTES_FACTOR = 1440
 HOUR_TO_MINUTE_FACTOR = 60
