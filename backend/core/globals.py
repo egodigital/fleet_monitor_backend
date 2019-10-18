@@ -45,12 +45,12 @@ def _DISTANCE_COST(distance):
     return _ALPHA * distance
 
 
-def _TIME_COST(time_slots):
-    return _BETA * exp(time_slots)
+def _TIME_COST(amount_time_slots):
+    return _BETA * exp(amount_time_slots)
 
 
-def BASE_PRICE(distance, time_slots):
-    return _DISTANCE_COST(distance) + _TIME_COST(time_slots)
+def BASE_PRICE(distance, amount_time_slots):
+    return _DISTANCE_COST(distance) + _TIME_COST(amount_time_slots)
 
 
 LATE_RETURN_FEE_MAX = 0.2
