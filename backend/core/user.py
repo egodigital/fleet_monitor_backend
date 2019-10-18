@@ -1,3 +1,7 @@
+from backend.core.globals import BONUS_POINT_TO_FREE_RIDE_EQUIVALENT
+from backend.core.globals import FEATURE_DISCOVERY_MAX
+
+
 class Credentials:
 
     def __init__(self, user_id, password):
@@ -26,8 +30,6 @@ class User:
     """
     Class to store user data.s
     """
-
-    FEATURE_DISCOVERY_MAX = 10
 
     def __init__(self, first_name: str, last_name: str,
                  user_id: str, password: str, occupation: str = "",
@@ -68,13 +70,13 @@ class User:
 
     def add_bonus_points(self, bonus: int) -> None:
         temp = self.bonus
-        if (temp % 100 + bonus) > 100:
+        if (temp % BONUS_POINT_TO_FREE_RIDE_EQUIVALENT + bonus) > BONUS_POINT_TO_FREE_RIDE_EQUIVALENT:
             self.free_rides += 1
         self.bonus += bonus
 
     def increment_feature_discovery(self) -> None:
         self.feature_discovery += 1
-        if self.feature_discovery == self.FEATURE_DISCOVERY_MAX:
+        if self.feature_discovery == FEATURE_DISCOVERY_MAX:
             self.free_rides += 1
 
     def take_free_ride(self):

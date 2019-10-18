@@ -31,6 +31,10 @@ BATTERY_CONSERVATIVE_FACTOR = 0.2
 # --- Globals concerning users
 LONELY_WOLF_THRESHOLD = 0.3
 
+# Bonus points if car is returned in time
+RETURN_ON_TIME_REWARD = 50
+BONUS_POINT_TO_FREE_RIDE_EQUIVALENT = 100
+FEATURE_DISCOVERY_MAX = 10
 
 # --- Globals related to price function
 _ALPHA = 0.5

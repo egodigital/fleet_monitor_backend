@@ -13,6 +13,7 @@ from .globals import LATE_RETURN_FEE
 from .globals import LATE_RETURN_FEE_MAX
 from .globals import LOOK_AHEAD_TIME_SLOTS
 from .globals import LONELY_WOLF_THRESHOLD
+from .globals import RETURN_ON_TIME_REWARD
 from .user import User
 
 
