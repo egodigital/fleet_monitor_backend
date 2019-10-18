@@ -46,17 +46,23 @@ class User:
         self.social_status = SocialStatus()
         self.behavioural_status = BehaviouralStatus()
 
-    def set_name(self, name: str) -> None:
-        self.name = name
+    def set_first_name(self, first_name: str) -> None:
+        self.first_name = first_name
 
-    def set_phone_number(self, phone_number: str) -> None:
-        self.phone_number = phone_number
+    def set_last_name(self, last_name: str) -> None:
+        self.last_name = last_name
 
     def set_userid(self, user_id: str) -> None:
         self.credentials.user_id = user_id
 
     def set_password(self, password: str) -> None:
         self.credentials.password = password
+
+    def set_occupation(self, occupation: str) -> None:
+        self.occupation = occupation
+
+    def set_phone_number(self, phone_number: str) -> None:
+        self.phone_number = phone_number
 
     def add_bonus_points(self, bonus: int) -> None:
         temp = self.bonus
