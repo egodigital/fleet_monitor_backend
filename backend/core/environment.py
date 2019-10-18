@@ -51,7 +51,8 @@ class Environment:
 
     def _get_indices(self, t1: datetime, t2: datetime) -> List[int]:
         offset = self._time_slot_offset(t1)
-        indices = timeutil.datetimes_to_time_slots(t1, t2)
+        amount_of_time_slots = timeutil.datetimes_to_time_slots(t1, t2)
+        indices = [x for x in list(range(amount_of_time_slots))]
         return [x + offset for x in indices]
 
     def _book_time_slots(self, license_: str, t1: datetime, t2: datetime) -> None:
@@ -72,6 +73,8 @@ class Environment:
         # Safety padding
         #   ->  keep at least one 15 minute slot free
         #       before and after the booking
+        if len(time_slots) == 1:
+            pass
         if time_slots[indices[0] - 1] == 1:
             return False
         if time_slots[indices[len(indices) - 1] + 1] == 1:
@@ -120,6 +123,7 @@ class Environment:
         indices = [(idx + i) % n_cars for i in range(n_cars)]
         start_time = new_booking.start_time
         end_time = new_booking.end_time
+        distance = new_booking.distance
         for i in indices:
             car = self.cars[i]
             license_ = self.cars[i].license
@@ -167,8 +171,8 @@ class Environment:
         base_price = BASE_PRICE(distance, amount_time_slots)
         discount = BONUS_POINT_PRICE_DISCOUNT(user.bonus_points)
         estimated_price = base_price - discount
-        surplus = price * (1 + PRICE_SURPLUS_OF_NO_CARPOOLING_RIDES)
-        estimated_price = price + surplus
+        surplus = estimated_price * (1 + PRICE_SURPLUS_OF_NO_CARPOOLING_RIDES)
+        estimated_price = estimated_price + surplus
         return estimated_price
 
     def _update_preferences_and_nature(self, user_id: str) -> bool:
@@ -206,6 +210,7 @@ class Environment:
         car = Car(license_, model)
         self.cars.append(car)
         self.cars_to_timeslots[license_] = list(range(LOOK_AHEAD_TIME_SLOTS))
+        return True
 
     def update_car_information(self, license_: str, range_: str = None, in_repair: bool = None) -> None:
         car = self._get_car_by_license(license_)
@@ -316,10 +321,10 @@ class Environment:
                 "car": car,
             }
         return {
-                "booking_id": None,
-                "price": -1,
-                "car": None,
-            }
+            "booking_id": None,
+            "price": -1,
+            "car": None,
+        }
 
     def close_booking(self, booking_id: str, handover_time: str):
         booking: Booking = self.booking_system.get_booking(booking_id)
@@ -378,3 +383,54 @@ class Environment:
 
     def get_bookings_by_user(self, user_id) -> List[Booking]:
         return self.booking_system.get_bookings_by_user_id(user_id)
+
+
+class TestData:
+
+    def __init__(self):
+        self.users = [
+            User("Patrice", "Dummy1", "patrice", "asdasd"),
+            User("Patrice", "Dummy2", "patrice2", "asdasd"),
+            User("Patrice", "Dummy3", "patrice3", "asdasd"),
+        ]
+
+        self.cars = [
+            Car("License1", "Model1"),
+            Car("License2", "Model2"),
+            Car("License3", "Model3"),
+        ]
+
+        self.bookings = [
+            Booking(10000000, 10000900, 1000, "patrice")
+        ]
+
+
+if __name__ == "__main__":
+    env = Environment()
+    data = TestData()
+    users = data.users
+    cars = data.cars
+    bookings = data.bookings
+
+    print("######### CREATING USERS #############")
+    for user in users:
+        ret = env.add_user(user.first_name, user.set_last_name,
+                           user.credentials.user_id, user.credentials.password)
+        print(ret)
+
+    print("######### CREATING CARS #############")
+    for car in cars:
+        ret = env.add_car(car.license, car.model)
+        print(ret)
+
+    print(env.cars_to_timeslots)
+
+    print("######### CREATING BOOKINGS #############")
+    for b in bookings:
+        ret = env.add_booking(
+            timeutil.timestamp_to_datetime(b.start_time),
+            timeutil.timestamp_to_datetime(b.end_time),
+            b.distance,
+            b.user_id
+        )
+        print(ret)

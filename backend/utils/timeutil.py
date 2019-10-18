@@ -35,7 +35,7 @@ def hours_to_minutes(amount: float) -> int:
 
 
 def seconds_to_minutes(amount: int) -> int:
-    return int(amount * SECOND_TO_MINUTE_FACTOR)
+    return amount * SECOND_TO_MINUTE_FACTOR
 
 
 def minutes_to_hours(amount: int) -> float:
@@ -47,7 +47,7 @@ def datetimes_to_time_slots(t1: datetime, t2:
     delta = t2 - t1
     seconds = delta.total_seconds()
     minutes = seconds_to_minutes(seconds)
-    booking_slots = minutes_to_time_slots(minutes)
+    booking_slots = int(minutes_to_time_slots(minutes))
     return booking_slots
 
 
