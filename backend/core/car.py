@@ -7,7 +7,6 @@ class Car:
     def __init__(self, license_: str, model: str):
         self.license = license
         self.model = model
-        self.car_id = license + "_" + model
         self.range = CAR_REACH_AT_FULL_CHARGE
         self.in_repair = False
         self.repair_time = 0
