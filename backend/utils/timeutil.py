@@ -75,3 +75,7 @@ def get_start_time() -> datetime:
     d = _round_up_to_next_15_minutes(datetime.now())
     date_str = d.strftime("%Y-%m-%d %H:%M:%S")
     return datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+
+
+def timestamp_to_datetime(timestamp: int) -> datetime:
+    return datetime.fromtimestamp(timestamp)
