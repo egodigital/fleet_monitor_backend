@@ -77,7 +77,6 @@ class Environment:
         return -1
 
     def add_car(self, license_: str, model: str) -> None:
-        n_cars = len(self.cars)
         car = Car(license_, model)
         self.cars.append(car)
         self.cars_to_timeslots[license_] = list(range(LOOK_AHEAD_TIME_SLOTS))
