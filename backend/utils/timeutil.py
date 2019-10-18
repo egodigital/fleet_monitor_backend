@@ -48,3 +48,8 @@ def datetimes_to_time_slots(t1: datetime, t2:
     minutes = seconds_to_minutes(seconds)
     booking_slots = minutes_to_time_slots(minutes)
     return booking_slots
+
+
+def current_time() -> datetime:
+    date_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
