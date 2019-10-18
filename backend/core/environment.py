@@ -69,7 +69,7 @@ class Environment:
                 return False
         return True
 
-    def _find_car(self, license_):
+    def _find_car(self, license_: str) -> int:
         for i in range(len(self.cars)):
             car = self.cars[i]
             if car.license == license_:
@@ -89,6 +89,11 @@ class Environment:
             car.set_range(range_)
         if in_repair is not None:
             car.set_in_repair(in_repair)
+            # TODO: Create a booking for the repair
+            # time and cancel all booking in that time
+            #
+            # Automatically assing new car to user and
+            # send notification
 
     def remove_car(self, license_: str) -> bool:
         idx = self._find_car(license_)
