@@ -246,7 +246,10 @@ class Environment:
             new_booking.set_license(car.license)
             self.last_car_booked = car.license
             id_ = self.booking_system.add_booking(new_booking)
+            # Determine price of booking based on a fine tuned
+            # pricing function
             price = self._get_price(new_booking, bookings)
+            # Update user stats
             self._update_preferences_and_nature(user_id)
             return id_, price, car
         return None, -1, None
