@@ -52,12 +52,22 @@ def datetimes_to_time_slots(t1: datetime, t2:
 
 
 def _round_up_to_next_15_minutes(d: datetime) -> datetime:
-    approx = round(d.minute / SMALLEST_TIME_UNIT) * SMALLEST_TIME_UNIT
-    d = d.replace(minute=0)
-    d += datetime.timedelta(seconds=approx * MINUTE_TO_SECOND_FACTOR)
+    minutes = round(d.minute)
+    if minutes == 0:
+        d = d.replace(second=0)
+    elif minutes < 15:
+        d = d.replace(minute=15, second=0)
+    elif minutes < 30:
+        d = d.replace(minute=30, second=0)
+    elif minutes < 45:
+        d = d.replace(minute=45, second=0)
+    else:
+        d = d.replace(hour=d.hour+1, minute=0, second=0)
     return d
 
 
 def current_time() -> datetime:
-    date_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(datetime.now())
+    d = _round_up_to_next_15_minutes(datetime.now())
+    date_str = d.strftime("%Y-%m-%d %H:%M:%S")
     return datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
