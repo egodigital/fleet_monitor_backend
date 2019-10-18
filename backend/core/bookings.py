@@ -3,8 +3,8 @@ import uuid
 
 from typing import List
 
-from .globals import SMALL_ROUND_TRIP_MAX_DURATION
-from .user import User
+from backend.core.globals_ import SMALL_ROUND_TRIP_MAX_DURATION
+from backend.core.user import User
 
 
 class Booking:

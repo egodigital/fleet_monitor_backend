@@ -1,5 +1,5 @@
-from backend.core.globals import BONUS_POINT_TO_FREE_RIDE_EQUIVALENT
-from backend.core.globals import FEATURE_DISCOVERY_MAX
+from backend.core.globals_ import BONUS_POINT_TO_FREE_RIDE_EQUIVALENT
+from backend.core.globals_ import FEATURE_DISCOVERY_MAX
 
 
 class Credentials:

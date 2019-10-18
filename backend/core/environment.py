@@ -1,23 +1,24 @@
+from datetime import datetime
 from typing import List
 from collections import defaultdict
 
 from backend.definitions import get_prj_root
 from backend.utils import timeutil
 
-from .bookings import Booking
-from .bookings import BookingSystem
-from .car import Car
-from datetime import datetime
-from .globals import BASE_PRICE
-from .globals import BATTERY_CONSERVATIVE_FACTOR
-from .globals import BONUS_POINT_PRICE_DISCOUNT
-from .globals import LATE_RETURN_FEE
-from .globals import LATE_RETURN_FEE_MAX
-from .globals import LOOK_AHEAD_TIME_SLOTS
-from .globals import LONELY_WOLF_THRESHOLD
-from .globals import RETURN_ON_TIME_REWARD
-from .globals import PRICE_SURPLUS_OF_NO_CARPOOLING_RIDES
-from .user import User
+from backend.core.bookings import Booking
+from backend.core.bookings import BookingSystem
+from backend.core.car import Car
+
+from backend.core.globals_ import BASE_PRICE
+from backend.core.globals_ import BATTERY_CONSERVATIVE_FACTOR
+from backend.core.globals_ import BONUS_POINT_PRICE_DISCOUNT
+from backend.core.globals_ import LATE_RETURN_FEE
+from backend.core.globals_ import LATE_RETURN_FEE_MAX
+from backend.core.globals_ import LOOK_AHEAD_TIME_SLOTS
+from backend.core.globals_ import LONELY_WOLF_THRESHOLD
+from backend.core.globals_ import RETURN_ON_TIME_REWARD
+from backend.core.globals_ import PRICE_SURPLUS_OF_NO_CARPOOLING_RIDES
+from backend.core.user import User
 
 
 class Environment:
@@ -65,7 +66,7 @@ class Environment:
         for i in indices:
             time_slots[i] = 0
 
-    def _time_slot_free(self: license_: str, t1: datetime, t2: datetime) -> None:
+    def _time_slot_free(self, license_: str, t1: datetime, t2: datetime) -> None:
         indices = self._get_indices(t1, t2)
         time_slots = self.cars_to_timeslots[license_]
         # Safety padding
@@ -95,7 +96,8 @@ class Environment:
         # A time slot is available if it is free
         # and if the car has enough charge by a
         # conservative estimate
-        bool available = self._time_slot_free(license_, t1, t2) and self._enough_charge(license_, t1, distance)
+        available = self._time_slot_free(
+            license_, t1, t2) and self._enough_charge(license_, t1, distance)
 
     def _get_prior_bookings_of_car(self, license_: str, t1: datetime) -> List[Booking]:
         bookings = self.booking_system.get_bookings_by_license(license_)

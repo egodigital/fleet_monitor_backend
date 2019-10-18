@@ -1,5 +1,5 @@
-from .globals import CAR_REACH_AT_FULL_CHARGE
-from .globals import CAR_REPAIR_TIME
+from backend.core.globals_ import CAR_REACH_AT_FULL_CHARGE
+from backend.core.globals_ import CAR_REPAIR_TIME
 
 
 class Car:

@@ -30,10 +30,14 @@ def print_app_info():
     return jsonify({"about": "This is the fleet monitor app"})
 
 
-@app.route("/booking_price", methods=["POST"])
-def booking_price():
-    data = request.data
-    return handler.handle_booking_price(data["start_time"], data["end_time"], data["user_id"])
+@app.route("/get_bookings", methods=["GET"])
+def api_get_bookings():
+    pass
+
+
+@app.route("/get_bookings_by_userid", methods=["GET"])
+def api_get_bookings_by_userid():
+    pass
 
 
 @app.route("/book_vehicle", methods=["POST"])
