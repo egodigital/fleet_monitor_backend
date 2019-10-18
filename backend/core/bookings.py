@@ -30,11 +30,11 @@ class Booking:
         self.tags = []
         self.closed = False
 
-    def set_start_time(self, start_time: str) -> None:
-        self.start_time = datetime(start_time)
+    def set_start_time(self, start_time: datetime) -> None:
+        self.start_time = start_time
 
-    def set_end_time(self, end_time: str) -> None:
-        self.end_time = datetime(end_time)
+    def set_end_time(self, end_time: datetime) -> None:
+        self.end_time = end_time
 
     def set_distance(self, distance: float) -> None:
         self.distance = distance
@@ -71,7 +71,7 @@ class BookingSystem:
 
     def add_booking(self, booking: Booking) -> str:
         id_ = id_ = str(uuid.uuid1())
-        self.__bookings[id_] = bookin.__bookings[id_] = booking
+        self.__bookings[id_] = self.__bookings[id_] = booking
         return id_
 
     def close_booking(self, booking_id):
