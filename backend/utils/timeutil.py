@@ -9,12 +9,16 @@ SECOND_TO_MINUTE_FACTOR = 1/60
 MINUTE_TO_HOUR_FACTOR = 1/60
 
 
-def booking_time_slots_to_minutes(amount: int) -> int:
+def booking_slots_to_minutes(amount: int) -> int:
     return amount * SMALLEST_TIME_UNIT
 
 
+def minutes_to_booking_slots(amount: int) -> int:
+    return amount / SMALLEST_TIME_UNIT
+
+
 def seconds_to_minutes(amount: int) -> int:
-    return round(amount * SECOND_TO_MINUTE_FACTOR)
+    return int(amount * SECOND_TO_MINUTE_FACTOR)
 
 
 def minutes_to_hours(amount: int) -> float:
@@ -29,6 +33,6 @@ def datetimes_to_time_slots(start_time: datetime, end_time:
                             datetime) -> int:
     delta = end_time - start_time
     seconds = delta.total_seconds()
-    minutes = int(seconds * SECOND_TO_MINUTE_FACTOR)
-    booking_slots = minutes / SMALLEST_TIME_UNIT
+    minutes = seconds_to_minutes(seconds)
+    booking_slots = minutes_to_booking_slots(minutes)
     return booking_slots
