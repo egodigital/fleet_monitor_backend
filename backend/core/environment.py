@@ -248,7 +248,11 @@ class Environment:
                     booking.add_cost(price * LATE_RETURN_FEE[keys[i]])
                     break
         else:
-            pass
+            user_id = booking.user_id
+            for user in self.users:
+                if user.credentials.user_id == user_id:
+                    user.add_bonus_points(RETURN_ON_TIME_REWARD)
+                    break
 
         self.booking_system.close_booking(booking_id)
 
