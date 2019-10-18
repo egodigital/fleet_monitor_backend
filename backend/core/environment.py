@@ -51,9 +51,6 @@ class Environment:
 
     def _get_indices(self, t1: datetime, t2: datetime) -> List[int]:
         offset = self._time_slot_offset(t1)
-        print(t1)
-        print(t2)
-        print(offset)
         amount_of_time_slots = timeutil.datetimes_to_time_slots(t1, t2)
         indices = [x for x in list(range(amount_of_time_slots))]
         return [x + offset for x in indices]
@@ -72,21 +69,23 @@ class Environment:
 
     def _time_slot_free(self, license_: str, t1: datetime, t2: datetime) -> None:
         indices = self._get_indices(t1, t2)
-        print(indices)
         time_slots = self.cars_to_timeslots[license_]
         # Safety padding
         #   ->  keep at least one 15 minute slot free
         #       before and after the booking
-        if len(time_slots) == 1:
-            pass
-        if time_slots[indices[0] - 1] == 1:
-            return False
-        if time_slots[indices[len(indices) - 1] + 1] == 1:
-            return False
-
-        for i in indices:
-            if time_slots[i] == 1:
+        start_idx = indices[0]
+        n = len(indices)
+        # Check begging of time slot
+        if start_idx != 0:
+            if time_slots[start_idx - 1] == 1:
                 return False
+        elif start_idx == 0:
+            if time_slots[1] == 1:
+                return False
+
+        # Check end of time slot
+        if time_slots[n] == 1:
+            return False
         return True
 
     def _enough_charge(self, license_: str, t1: datetime, distance: float) -> bool:
@@ -103,9 +102,11 @@ class Environment:
         # A time slot is available if it is free
         # and if the car has enough charge by a
         # conservative estimate
-        available = self._time_slot_free(
-            license_, t1, t2) and self._enough_charge(license_, t1, distance)
-        return available
+        b1 = self._time_slot_free(license_, t1, t2)
+        b2 = self._enough_charge(license_, t1, distance)
+        print(b1)
+        print(b2)
+        return b1 and b2
 
     def _get_prior_bookings_of_car(self, license_: str, t1: datetime) -> List[Booking]:
         bookings = self.booking_system.get_bookings_by_license(license_)
@@ -173,7 +174,7 @@ class Environment:
             start_time, end_time)
 
         base_price = BASE_PRICE(distance, amount_time_slots)
-        discount = BONUS_POINT_PRICE_DISCOUNT(user.bonus_points)
+        discount = BONUS_POINT_PRICE_DISCOUNT(user.bonus)
         estimated_price = base_price - discount
         surplus = estimated_price * (1 + PRICE_SURPLUS_OF_NO_CARPOOLING_RIDES)
         estimated_price = estimated_price + surplus
@@ -213,7 +214,7 @@ class Environment:
     def add_car(self, license_: str, model: str) -> None:
         car = Car(license_, model)
         self.cars.append(car)
-        self.cars_to_timeslots[license_] = list(range(LOOK_AHEAD_TIME_SLOTS))
+        self.cars_to_timeslots[license_] = LOOK_AHEAD_TIME_SLOTS * [0]
         return True
 
     def update_car_information(self, license_: str, range_: str = None, in_repair: bool = None) -> None:
@@ -408,7 +409,7 @@ class TestData:
         now = timeutil.get_start_time()
         timestamp = timeutil.datetime_to_timestamp(now)
         self.bookings = [
-            Booking(timestamp, timestamp + 900, 1000, "patrice")
+            Booking(timestamp, timestamp + 900, 20, "patrice")
         ]
 
 

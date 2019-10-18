@@ -112,7 +112,7 @@ class BookingSystem:
     def get_bookings_by_user_id(self, user_id: str) -> None:
         bookings = []
         for _, b in self.__bookings.items():
-            if b.user.credentials.uer_id == user_id:
+            if b.user_id == user_id:
                 bookings.append(b)
         return bookings
 
