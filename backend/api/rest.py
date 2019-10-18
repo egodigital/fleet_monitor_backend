@@ -82,7 +82,7 @@ def book_vehicle():
     end_time = timeutil.timestamp_to_datetime(data["end_time"])
     distance = data["distance"]
     user_id = data["user_id"]
-    allow_car_pooling = data["allow_car_pooling"]
+    allow_car_pooling = data.get("allow_car_pooling", True)
     ret = _handler.handle_book_vehicle(
         start_time, end_time, distance, user_id, allow_car_pooling)
     return jsonify(ret)

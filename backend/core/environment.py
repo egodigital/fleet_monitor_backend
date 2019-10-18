@@ -98,6 +98,7 @@ class Environment:
         # conservative estimate
         available = self._time_slot_free(
             license_, t1, t2) and self._enough_charge(license_, t1, distance)
+        return available
 
     def _get_prior_bookings_of_car(self, license_: str, t1: datetime) -> List[Booking]:
         bookings = self.booking_system.get_bookings_by_license(license_)
@@ -309,8 +310,16 @@ class Environment:
                 price = self._get_estimated_price(new_booking, bookings)
             # Update user stats
             self._update_preferences_and_nature(user_id)
-            return id_, price, car
-        return None, -1, None
+            return {
+                "booking_id": id_,
+                "price": price,
+                "car": car,
+            }
+        return {
+                "booking_id": None,
+                "price": -1,
+                "car": None,
+            }
 
     def close_booking(self, booking_id: str, handover_time: str):
         booking: Booking = self.booking_system.get_booking(booking_id)
