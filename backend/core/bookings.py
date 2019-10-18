@@ -60,9 +60,10 @@ class BookingSystem:
     def __init__(self):
         self.__bookings = {}
 
-    def add_booking(self, booking: Booking) -> None:
+    def add_booking(self, booking: Booking) -> str:
         id_ = id_ = str(uuid.uuid1())
         self.__bookings[id_] = booking
+        return id_
 
     def delete_booking(self, id_: str) -> None:
         del self.__bookings[id_]
