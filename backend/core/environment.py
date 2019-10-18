@@ -76,7 +76,7 @@ class Environment:
             self.last_car_booked = self.cars[idx-1].license
         del self.cars[idx]
         del self.cars_to_timeslots[idx]
-        self.booking_system.delete_booking_by_license(license_)
+        self.booking_system.delete_bookings_by_license(license_)
 
     def get_cars(self) -> List[Car]:
         return self.cars
@@ -136,13 +136,13 @@ class Environment:
     def remove_user(self, user_id: str) -> bool:
         idx = self._find_user(user_id)
         del self.users[idx]
-        self.booking_system.delete_booking_by_userid(user_id)
+        self.booking_system.delete_bookings_by_userid(user_id)
 
     def get_users(self) -> List[User]:
         return self.users
 
     def _find_booking(self, booking_id: str) -> Booking:
-        return self.booking_system.get_booking_by_id(booking_id)
+        return self.booking_system.get_booking(booking_id)
 
     def _retrieve_car_for_booking(self, new_booking: Booking, all_bookings: List[Booking]) -> Car:
         # TODO: Implement
@@ -159,7 +159,7 @@ class Environment:
         status_changed: bool = False
         preference = "Unknown"
         nature = "Unknown"
-        bookings: List[Booking] = self.booking_system.get_bookings_of_user(
+        bookings: List[Booking] = self.booking_system.get_bookings_by_user_id(
             user_id)
 
         n = len(bookings)
@@ -195,7 +195,7 @@ class Environment:
 
     def close_booking(self, booking_id: str, handover_time: str):
         self.booking_system.close_booking(booking_id)
-        booking: Booking = self.booking_system.get_booking_by_id(booking_id)
+        booking: Booking = self.booking_system.get_booking(booking_id)
         handover_time = datetime(handover_time)
         end_time = booking.end_time
         minutes_late = timeutil.time_slots_to_minutes(
@@ -216,13 +216,13 @@ class Environment:
         self.booking_system.delete_booking(booking_id)
 
     def add_tag_to_booking(self, booking_id, tag):
-        booking: Booking = self.booking_system.get_booking_by_id(
+        booking: Booking = self.booking_system.get_booking(
             booking_id
         )
         booking.add_tag(tag)
 
     def remove_tag_from_booking(self, booking_id, tag):
-        booking: Booking = self.booking_system.get_booking_by_id(
+        booking: Booking = self.booking_system.get_booking(
             booking_id
         )
         booking.remove_tag(tag)
@@ -231,4 +231,4 @@ class Environment:
         return self.booking_system.get_all_bookings()
 
     def get_bookings_by_user(self, user_id) -> List[Booking]:
-        return self.booking_system.get_bookings_of_user(user_id)
+        return self.booking_system.get_bookings_by_user_id(user_id)

@@ -78,7 +78,7 @@ class BookingSystem:
     def delete_booking(self, id_: str) -> None:
         del self.__bookings[id_]
 
-    def delete_booking_by_license(self, license_):
+    def delete_bookings_by_license(self, license_):
         ids = []
         for id_, b in self.__bookings.items():
             if b.license == license_:
@@ -87,7 +87,7 @@ class BookingSystem:
         for id_ in ids:
             del self.__bookings[id_]
 
-    def delete_booking_by_userid(self, user_id):
+    def delete_bookings_by_userid(self, user_id):
         ids = []
         for id_, b in self.__bookings.items():
             if b.user_id == user_id:
@@ -96,15 +96,22 @@ class BookingSystem:
         for id_ in ids:
             del self.__bookings[id_]
 
-    def get_booking_by_id(self, booking_id):
+    def get_booking(self, booking_id):
         return self.__bookings[booking_id]
 
-    def get_bookings_of_user(self, user_id: str) -> None:
-        user_bookings = []
-        for _, v in self.__bookings.items():
-            if v.user.credentials.uer_id == user_id:
-                user_bookings.append(v)
-        return user_bookings
+    def get_bookings_by_license(self, license_: str) -> None:
+        bookings = []
+        for _, b in self.__bookings.items():
+            if b.license == license_:
+                bookings.append(b)
+        return bookings
+
+    def get_bookings_by_user_id(self, user_id: str) -> None:
+        bookings = []
+        for _, b in self.__bookings.items():
+            if b.user.credentials.uer_id == user_id:
+                bookings.append(b)
+        return bookings
 
     def get_all_bookings(self) -> List[Booking]:
         return self.__bookings.values()
