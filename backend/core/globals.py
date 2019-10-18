@@ -30,5 +30,4 @@ AVERAGE_SPEED = 35
 # tag name -> description
 DEFAULT_TAGS = {
     "Lebensmittel": "Die Person kauft während ihrer Buchung Lebensmittel ein",
-    ""
 }
