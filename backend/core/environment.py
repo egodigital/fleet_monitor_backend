@@ -16,6 +16,7 @@ from .globals import LATE_RETURN_FEE_MAX
 from .globals import LOOK_AHEAD_TIME_SLOTS
 from .globals import LONELY_WOLF_THRESHOLD
 from .globals import RETURN_ON_TIME_REWARD
+from .globals import PRICE_SURPLUS_OF_NO_CARPOOLING_RIDES
 from .user import User
 
 
@@ -124,6 +125,25 @@ class Environment:
         return None
 
     def _get_estimated_price(self, new_booking: Booking, bookings: List[Booking]) -> float:
+        """
+        Optimization goals:
+            1.) Maximize utilization
+            2.) Minimize late returns
+            3.) Improve charging behaviour
+            4.) Reduce CO^2 emissions
+            5.) High availability
+
+        How each individual goal is achieved:
+            1.)
+
+            2.)
+
+            3.)
+
+            4.) 
+
+            5.)
+        """
         start_time = new_booking.start_time
         end_time = new_booking.end_time
         distance = new_booking.distance
@@ -133,10 +153,12 @@ class Environment:
             start_time, end_time)
 
         base_price = BASE_PRICE(distance, amount_time_slots)
-
         discount = BONUS_POINT_PRICE_DISCOUNT(user.bonus_points)
+        estimated_price = base_price - discount
+        surplus = price * (1 + PRICE_SURPLUS_OF_NO_CARPOOLING_RIDES)
+        estimated_price = price + surplus
 
-        return base_price - discount
+        return estimated_price
 
     def _update_preferences_and_nature(self, user_id: str) -> bool:
         status_changed: bool = False
