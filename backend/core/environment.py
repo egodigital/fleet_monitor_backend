@@ -33,6 +33,16 @@ class Environment:
         self.users = []
         self.booking_system = BookingSystem()
 
+    def _get_user_by_id(self, user_id):
+        for user in self.users:
+            if user.credentials.user_id == user_id:
+                return user
+
+    def _get_car_by_license(self, license_):
+        for car in self.cars:
+            if car.license == license_:
+                return car
+
     def _time_slot_offset(self, t: datetime) -> int:
         offset = timeutil.datetimes_to_time_slots(t, self.start_time)
         return offset
@@ -73,7 +83,7 @@ class Environment:
     def _enough_charge(self, license_: str, t1: datetime, distance: float) -> bool:
         prior_bookings: List[Booking] = self._get_prior_bookings_of_car(
             license_, t1)
-        car = self.cars[self._find_car(license_)]
+        car = self._get_car_by_license(license_)
         sum_distance = sum(b.distance for b in prior_bookings)
         estimate_left_range = car.range - sum_distance
         if estimate_left_range * (1 + BATTERY_CONSERVATIVE_FACTOR) < distance:
@@ -117,7 +127,8 @@ class Environment:
         start_time = new_booking.start_time
         end_time = new_booking.end_time
         distance = new_booking.distance
-        user = self.users[self._find_user(new_booking.user_id)]
+        user_id = new_booking.user_id
+        user = self._get_user_by_id(user_id)
         amount_time_slots = timeutil.datetimes_to_time_slots(
             start_time, end_time)
 
@@ -136,8 +147,7 @@ class Environment:
         n_car_pooled = sum(int(b.allow_car_pooling) for b in bookings)
 
         if n_car_pooled/n < LONELY_WOLF_THRESHOLD:
-            idx = self._find_user(user_id)
-            user = self.users[idx]
+            user = self._get_user_by_id(user_id)
             user.behavioural_status.nature = "Lonely Wolf"
             status_changed = True
 
@@ -165,8 +175,7 @@ class Environment:
         self.cars_to_timeslots[license_] = list(range(LOOK_AHEAD_TIME_SLOTS))
 
     def update_car_information(self, license_: str, range_: str = None, in_repair: bool = None) -> None:
-        idx = self._find_car(license_)
-        car = self.cars[idx]
+        icar = self._get_car_by_license(license_)
         if range_ is not None:
             car.set_range(range_)
         if in_repair is not None:
@@ -256,6 +265,7 @@ class Environment:
         car = self._retrieve_car_for_booking(new_booking, bookings)
         if car is not None:
             new_booking.set_license(car.license)
+            user = self._get_user_by_id(user_id)
             self.last_car_booked = car.license
             id_ = self.booking_system.add_booking(new_booking)
             # Determine price of booking based on a fine tuned
