@@ -60,21 +60,15 @@ class BookingSystem:
     def __init__(self):
         self.__bookings = {}
 
-    def _check_booking_allowed(self, booking: Booking):
-        settings = booking.settings
+    def add_booking(self, booking: Booking) -> None:
+        id_ = id_ = str(uuid.uuid1())
+        self.__bookings[id_] = booking
 
-        return True
-
-    def add_booking(self, booking: Booking) -> bool:
-        if self._check_booking_allowed(booking):
-            id_ = id_ = str(uuid.uuid1())
-            self.__bookings[id_] = booking
-            return True
-        return False
-
-    def delete_booking(self, id_: str) -> bool:
+    def delete_booking(self, id_: str) -> None:
         del self.__bookings[id_]
-        return True
+
+    def get_booking_by_id(self, booking_id):
+        return self.__bookings[booking_id]
 
     def get_bookings_of_user(self, user_id: str) -> None:
         user_bookings = []
