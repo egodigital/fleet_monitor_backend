@@ -66,8 +66,12 @@ def _round_up_to_next_15_minutes(d: datetime) -> datetime:
     return d
 
 
-def current_time() -> datetime:
-    print(datetime.now())
+def get_current_time() -> datetime:
+    return datetime.now()
+
+
+def get_start_time() -> datetime:
+    d = get_current_time()
     d = _round_up_to_next_15_minutes(datetime.now())
     date_str = d.strftime("%Y-%m-%d %H:%M:%S")
     return datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
