@@ -78,7 +78,7 @@ def api_get_bookings_by_userid():
 @app.route("/book_vehicle", methods=["POST"])
 def book_vehicle():
     data = request.json
-    start_time = timeutil.timestamp_to_datetime(["start_time"])
+    start_time = timeutil.timestamp_to_datetime(data["start_time"])
     end_time = timeutil.timestamp_to_datetime(data["end_time"])
     distance = data["distance"]
     user_id = data["user_id"]
