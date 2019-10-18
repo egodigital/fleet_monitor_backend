@@ -1,7 +1,7 @@
 from datetime import datetime
 import math
 
-from backend.core.globals import SMALLEST_TIME_UNIT
+from backend.core.globals_ import SMALLEST_TIME_UNIT
 
 MINUTE_TO_TIME_SLOT_FACTOR = 1 / SMALLEST_TIME_UNIT
 TIME_SLOT_TO_MINUTE_FACTOR = SMALLEST_TIME_UNIT
