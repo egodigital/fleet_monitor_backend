@@ -31,3 +31,11 @@ AVERAGE_SPEED = 35
 DEFAULT_TAGS = {
     "Lebensmittel": "Die Person kauft während ihrer Buchung Lebensmittel ein",
 }
+
+
+PENALTY_LATE_CAR_RETURN = {
+    5: 0.05,
+    15: 0.1,
+    30: 0.15,
+    60: 0.2,
+}
