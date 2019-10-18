@@ -22,9 +22,11 @@ class Booking:
         self.user_id = user_id
         self.license = license_
         self.allow_car_pooling = allow_car_pooling
+        self.minutes_late = 0
+        self.price = 0
         # Tags attached to booking
         self.tags = []
-        self.minutes_late = 0
+        self.closed = False
 
     def set_start_time(self, start_time: str) -> None:
         self.start_time = datetime(start_time)
@@ -37,6 +39,12 @@ class Booking:
 
     def set_car_pooling_option(self, allow_car_pooling: bool) -> None:
         self.allow_car_pooling = allow_car_pooling
+
+    def set_minutes_late(self, minutes_late: int) -> None:
+        self.minutes_late = minutes_late
+
+    def set_price(self, price: float) -> None:
+        self.price = price
 
     def add_tag(self, tag: str) -> None:
         self.tags.append(tag)
@@ -58,11 +66,8 @@ class BookingSystem:
         self.__bookings[id_] = booking
         return id_
 
-    def close_booking(self, booking_id: str, handover_time: str):
-        # TODO: Finish implementation
-        booking = self.__bookings[booking_id]
-        end_time = booking.end_time
-        handover_time = datetime(handover_time)
+    def close_booking(self, booking_id):
+        self.__bookings[booking_id].closed = True
 
     def delete_booking(self, id_: str) -> None:
         del self.__bookings[id_]
