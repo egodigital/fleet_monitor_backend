@@ -1,8 +1,11 @@
+from typing import List
+
 from backend.definitions import get_prj_root
 
 from .bookings import Booking
 from .bookings import BookingSystem
 from .car import Car
+from .globals import LONELY_WOLF_THRESHOLD
 from .user import User
 
 
@@ -39,7 +42,10 @@ class Environment:
         idx = self._find_car(license_)
         del self.cars[idx]
 
-    def _find_user(self, user_id):
+    def get_cars(self) -> List[Car]:
+        return self.cars
+
+    def _find_user(self, user_id: str) -> int:
         for i in range(len(self.users)):
             user = self.users[i]
             if user.credentials.user_id == user_id:
@@ -92,9 +98,12 @@ class Environment:
         if share_booking_data is not None:
             user.set_share_booking_data(share_booking_data)
 
-    def delete_user(self, user_id: str) -> bool:
+    def remove_user(self, user_id: str) -> bool:
         idx = self._find_user(user_id)
         del self.users[idx]
+
+    def get_users(self) -> List[User]:
+        return self.users
 
     def _find_booking(self, booking_id):
         return self.booking_system.get_booking_by_id(booking_id)
@@ -107,6 +116,26 @@ class Environment:
 
     def _estimate_price(self, new_booking, all_bookings):
         return 1
+
+    def _update_preferences_and_nature(self, user_id):
+        bool status_changed = False
+        preference = "Unknown"
+        nature = "Unknown"
+        bookings: List[Booking] = self.booking_system.get_bookings_of_user(
+            user_id)
+
+        n = len(bookings)
+        n_car_pooled = sum(int(b.allow_car_pooling) for b in bookings)
+
+        if n_car_pooled/n < LONELY_WOLF_THRESHOLD:
+            idx = self._find_user(user_id)
+            user = self.users[idx]
+            user.behavioural_status.nature = "Lonely Wolf"
+            status_changed = True
+
+        # TODO: Figure out if user is economical, ecological
+        # or efficient
+        return status_changed
 
     def add_booking(self, start_time: str, end_time: str,
                     distance: float, user_id: str,
@@ -122,8 +151,11 @@ class Environment:
                         user_id, allow_car_pooling)
             )
             price = self._estimate_price(new_booking, all_bookings)
-            return id_, price
-        return None, -1
+            user_status_updated =
+            self._update_preferences_and_nature(
+                user_id)
+            return id_, price, user_status_updated
+        return None, -1, False
 
     def delete_booking(self, booking_id) -> None:
         self.booking_system.delete_booking(booking_id)
@@ -139,3 +171,9 @@ class Environment:
             booking_id
         )
         booking.remove_tag(tag)
+
+    def get_all_bookings(self) -> List[Booking]:
+        return self.booking_system.get_all_bookings()
+
+    def get_bookings_by_user(self, user_id) -> List[Booking]:
+        return self.booking_system.get_bookings_of_user(user_id)
