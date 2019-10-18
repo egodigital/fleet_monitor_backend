@@ -105,7 +105,7 @@ class Environment:
     def get_users(self) -> List[User]:
         return self.users
 
-    def _find_booking(self, booking_id):
+    def _find_booking(self, booking_id: str) -> Booking:
         return self.booking_system.get_booking_by_id(booking_id)
 
     def _check_booking_allowed(self, new_booking, all_bookings):
@@ -114,11 +114,11 @@ class Environment:
         # Availability depends on the fact
         return True
 
-    def _estimate_price(self, new_booking, all_bookings):
+    def _estimate_price(self, new_booking: Booking, all_bookings: List[Booking]) -> float:
         return 1
 
-    def _update_preferences_and_nature(self, user_id):
-        bool status_changed = False
+    def _update_preferences_and_nature(self, user_id: str) -> bool:
+        status_changed: bool = False
         preference = "Unknown"
         nature = "Unknown"
         bookings: List[Booking] = self.booking_system.get_bookings_of_user(
