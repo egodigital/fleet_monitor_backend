@@ -3,23 +3,26 @@ import uuid
 
 from typing import List
 
+from .globals import SMALL_ROUND_TRIP_MAX_DURATION
 from .user import User
 
 
-class BookingSettings:
+class BookingInformation:
     """
-    Class encapsulates further booking settings.
+    Class encapsulates all booking information.
     """
 
     def __init__(self, start_time: str, end_time: str,
-                 distance: int, parking_duration: int, user:
-                 User, allow_car_pooling: bool = True) -> None:
+                 distance: int, user_id: str,
+                 allow_car_pooling:
+                 bool = True) -> None:
         self.start_time = start_time
         self.end_time = end_time
         self.distance = distance
-        self.parking_duration = parking_duration
-        self.user = User
+        self.user_id = user_id
         self.allow_car_pooling = allow_car_pooling
+        # Tags attached to booking
+        self.tags = []
 
 
 class Booking:
@@ -27,12 +30,26 @@ class Booking:
     Class abstracts a car booking.
     """
 
-    def __init__(self, settings: BookingSettings) -> None:
-        self.settings = settings
+    def __init__(self, booking_info: BookingInformation) -> None:
+        self.booking_info = booking_info
 
-    def __str__(self):
-        # TODO: Implement string representation of reservation
-        pass
+    def set_start_time(self, start_time):
+        self.booking_info.start_time = start_time
+
+    def set_end_time(self, end_time):
+        self.booking_info.end_time = end_time
+
+    def set_distance(self, distance):
+        self.booking_info.distance = distance
+
+    def set_car_pooling_option(self, allow_car_pooling):
+        self.booking_info.allow_car_pooling = allow_car_pooling
+
+    def add_tag(self, tag: str) -> None:
+        self.booking_info.tags.append(tag)
+
+    def remove_tag(self, tag: str) -> None:
+        self.booking_info.tags.remove(tag)
 
 
 class BookingSystem:
@@ -43,13 +60,17 @@ class BookingSystem:
     def __init__(self):
         self.__bookings = {}
 
-    def add_booking(self, start_time: datetime, end_time:
-                    datetime, user: User, settings: BookingSettings) -> bool:
-        booking = Booking(settings)
-        id_ = id_ = str(uuid.uuid1())
-        self.__bookings[id_] = booking
-        # Everything worked fine
+    def _check_booking_allowed(self, booking: Booking):
+        settings = booking.settings
+
         return True
+
+    def add_booking(self, booking: Booking) -> bool:
+        if self._check_booking_allowed(booking):
+            id_ = id_ = str(uuid.uuid1())
+            self.__bookings[id_] = booking
+            return True
+        return False
 
     def delete_booking(self, id_: str) -> bool:
         del self.__bookings[id_]
