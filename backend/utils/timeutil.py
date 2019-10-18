@@ -11,6 +11,12 @@ SECOND_TO_MINUTE_FACTOR = 1/60
 MINUTE_TO_HOUR_FACTOR = 1/60
 
 
+def days_to_time_slots(amount: int) -> int:
+    return minutes_to_time_slots(
+        amount * DAY_TO_MINUTES_FACTOR
+    )
+
+
 def minutes_to_time_slots(amount: int) -> int:
     return amount * MINUTE_TO_TIME_SLOT_FACTOR
 
