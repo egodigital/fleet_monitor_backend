@@ -1,7 +1,7 @@
 from datetime import datetime
 import math
 
-from .globals import SMALLEST_TIME_UNIT
+from backend.core.globals import SMALLEST_TIME_UNIT
 
 DAY_TO_MINUTES_FACTOR = 1440
 HOUR_TO_MINUTE_FACTOR = 60
@@ -26,5 +26,5 @@ def datetimes_to_time_slots(start_time: datetime, end_time:
     delta = end_time - start_time
     seconds = delta.total_seconds()
     minutes = int(seconds * SECOND_TO_MINUTE_FACTOR)
-    booking_slots = minutes / BOOKING_TIME_SMALLEST_UNIT
+    booking_slots = minutes / SMALLEST_TIME_UNIT
     return booking_slots
