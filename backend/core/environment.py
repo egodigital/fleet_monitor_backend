@@ -134,15 +134,24 @@ class Environment:
             5.) High availability
 
         How each individual goal is achieved:
-            1.)
+            1.) * Because long rides are charged very high, they are discouraged
+                  such that the service may be utilised by more people and parking
+                  time is minimized.
 
-            2.)
+                  We understand utilization as a booked car that is actually driving
+                  and not just parking somewhere.
 
-            3.)
+            2.) * Bonus points which have positive influence on price function
+                * Charge late return fee by a progressive model
 
-            4.) 
+            3.) * Make sure the car has at least 20% more battery charge then
+                  is expected to be needed for the ride.
+                    -> NOTE: This reduces availability a little bit of course
 
-            5.)
+            4.) * Incentivize car pooling by charging a surplus if car pooling is
+                  not used.
+
+            5.) * Incentivize shorter booking spans by fast growing time cost function.
         """
         start_time = new_booking.start_time
         end_time = new_booking.end_time
@@ -157,7 +166,6 @@ class Environment:
         estimated_price = base_price - discount
         surplus = price * (1 + PRICE_SURPLUS_OF_NO_CARPOOLING_RIDES)
         estimated_price = price + surplus
-
         return estimated_price
 
     def _update_preferences_and_nature(self, user_id: str) -> bool:
