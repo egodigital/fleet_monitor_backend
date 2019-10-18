@@ -118,10 +118,33 @@ class Environment:
     def _find_booking(self, booking_id: str) -> Booking:
         return self.booking_system.get_booking(booking_id)
 
+    def _bookings_intersect(self, b1, b2):
+        if b1.start_time < b2.start_time and \
+           b1.end_time > b2.start_time or \
+           b1.start_time > b2.start_time and \
+           b1.end_time > b2.end_time or \
+           b1.start_time < b2.start_time and \
+           b1.end_time > b2.end_time or \
+           b1.start_time > b2.start_time and \
+           b1.end_time < b2.end_time:
+            return False
+        return True
+
+    def _first_booking_by_user_in_timeslot(self, new_booking):
+        bookings = self.booking_system.get_bookings_by_user_id(
+            new_booking.user_id)
+        for b in bookings:
+            if self._bookings_intersect(new_booking, b):
+                return False
+        return True
+
     def _retrieve_car_for_booking(self, new_booking: Booking, bookings: List[Booking]) -> Car:
         # Assign cars by round-robin principle
         # Also make sure the car is sufficiently
         # charged.
+        if not self._first_booking_by_user_in_timeslot(new_booking):
+            return None
+
         n_cars = len(self.cars)
         idx = self._find_car(self.last_car_booked)
         indices = [(idx + i) % n_cars for i in range(n_cars)]
