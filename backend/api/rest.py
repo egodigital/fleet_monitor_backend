@@ -62,21 +62,28 @@ def api_get_users():
 
 @app.route("/get_bookings", methods=["GET"])
 def api_get_bookings():
-    return jsonify(_handler.handle_get_bookings())
+    bookings = _handler.handle_get_bookings()
+    return jsonify({"bookins:": bookings})
 
 
 @app.route("/get_bookings_by_userid", methods=["GET"])
-def api_get_bookings_by_userid(user_id):
-    data = request.json
-    user_id = data["user_id"]
+def api_get_bookings_by_userid():
+    user_id = request.args.get("user_id")
     bookings = _handler.handle_get_bookings_by_userid(user_id)
     return jsonify(bookings)
 
 
 @app.route("/book_vehicle", methods=["POST"])
-def book_vehicle(start_time, end_time, user_id):
-    data = request.data
-    # return _handler.handle_book_vehicle(data["start_time"], data["end_time"], data["user_id"])
+def book_vehicle():
+    data = request.json
+    start_time = data["start_time"]
+    end_time = data["end_time"]
+    distance = data["distance"]
+    user_id = data["user_id"]
+    allow_car_pooling = data["allow_car_pooling"]
+    ret = _handler.handle_book_vehicle(
+        data[start_time, end_time, distance, user_id, allow_car_pooling)
+    return jsonify(ret)
 
 
 @app.errorhandler(404)
