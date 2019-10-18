@@ -406,9 +406,9 @@ class TestData:
 
         # current date and time
         now = timeutil.get_start_time()
-
+        timestamp = timeutil.datetime_to_timestamp(now)
         self.bookings = [
-            Booking(10000, 10900, 1000, "patrice")
+            Booking(timestamp, timestamp + 900, 1000, "patrice")
         ]
 
 
