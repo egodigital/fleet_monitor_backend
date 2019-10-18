@@ -7,49 +7,41 @@ from .globals import SMALL_ROUND_TRIP_MAX_DURATION
 from .user import User
 
 
-class BookingInformation:
+class Booking:
     """
-    Class encapsulates all booking information.
+    Class abstracts a car booking.
     """
 
     def __init__(self, start_time: str, end_time: str,
-                 distance: float, user_id: str,
+                 distance: float, user_id: str, license_,
                  allow_car_pooling:
                  bool = True) -> None:
         self.start_time = start_time
         self.end_time = end_time
         self.distance = distance
         self.user_id = user_id
+        self.license = license_
         self.allow_car_pooling = allow_car_pooling
         # Tags attached to booking
         self.tags = []
 
-
-class Booking:
-    """
-    Class abstracts a car booking.
-    """
-
-    def __init__(self, booking_info: BookingInformation) -> None:
-        self.booking_info = booking_info
-
     def set_start_time(self, start_time):
-        self.booking_info.start_time = start_time
+        self.start_time = start_time
 
     def set_end_time(self, end_time):
-        self.booking_info.end_time = end_time
+        self.end_time = end_time
 
     def set_distance(self, distance):
-        self.booking_info.distance = distance
+        self.distance = distance
 
     def set_car_pooling_option(self, allow_car_pooling):
-        self.booking_info.allow_car_pooling = allow_car_pooling
+        self.allow_car_pooling = allow_car_pooling
 
     def add_tag(self, tag: str) -> None:
-        self.booking_info.tags.append(tag)
+        self.tags.append(tag)
 
     def remove_tag(self, tag: str) -> None:
-        self.booking_info.tags.remove(tag)
+        self.tags.remove(tag)
 
 
 class BookingSystem:
