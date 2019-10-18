@@ -107,9 +107,10 @@ class Environment:
         booking_info = BookingInformation(
             start_time, end_time, distance, user_id, allow_car_pooling
         )
-        self.booking_system.add_booking(
+        id_ = self.booking_system.add_booking(
             Booking(booking_info)
         )
+        return id_
 
     def delete_booking(self, booking_id) -> None:
         self.booking_system.delete_booking(booking_id)
