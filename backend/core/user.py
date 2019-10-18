@@ -16,7 +16,9 @@ class SocialStatus:
 class BehaviouralStatus:
 
     def __init__(self):
+        # ("UNKNOWN", "ECONOMICAL", "ECOLOGICAL", "EFFICIENT")
         self.preferences = "UNKWOWN"
+        # ("SOCIAL", "LONELY WOLF")
         self.nature = "UNKWOWN"
 
 
