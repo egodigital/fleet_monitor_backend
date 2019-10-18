@@ -32,12 +32,12 @@ DEFAULT_TAGS = {
     "Lebensmittel": "Die Person kauft während ihrer Buchung Lebensmittel ein",
 }
 
-
+LATE_RETURN_MAX_PENALTY = 0.2
 PENALTY_LATE_CAR_RETURN = {
     5: 0.05,
     15: 0.1,
     30: 0.15,
-    60: 0.2,
+    60: LATE_RETURN_MAX_PENALTY,
 }
 
 LONELY_WOLF_THRESHOLD = 0.3
