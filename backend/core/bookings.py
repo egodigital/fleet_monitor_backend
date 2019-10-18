@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import uuid
 
 from typing import List
@@ -16,8 +16,8 @@ class Booking:
                  distance: float, user_id: str, license_,
                  allow_car_pooling:
                  bool = True) -> None:
-        self.start_time = start_time
-        self.end_time = end_time
+        self.start_time = datetime(start_time)
+        self.end_time = datetime(end_time)
         self.distance = distance
         self.user_id = user_id
         self.license = license_
@@ -25,16 +25,16 @@ class Booking:
         # Tags attached to booking
         self.tags = []
 
-    def set_start_time(self, start_time):
-        self.start_time = start_time
+    def set_start_time(self, start_time: str) -> None:
+        self.start_time = datetime(start_time)
 
-    def set_end_time(self, end_time):
-        self.end_time = end_time
+    def set_end_time(self, end_time: str) -> None:
+        self.end_time = datetime(end_time)
 
-    def set_distance(self, distance):
+    def set_distance(self, distance: float) -> None:
         self.distance = distance
 
-    def set_car_pooling_option(self, allow_car_pooling):
+    def set_car_pooling_option(self, allow_car_pooling: bool) -> None:
         self.allow_car_pooling = allow_car_pooling
 
     def add_tag(self, tag: str) -> None:
@@ -56,6 +56,9 @@ class BookingSystem:
         id_ = id_ = str(uuid.uuid1())
         self.__bookings[id_] = booking
         return id_
+
+    def close_booking(self, booking_id: str, handover_time: str):
+        pass
 
     def delete_booking(self, id_: str) -> None:
         del self.__bookings[id_]
