@@ -50,6 +50,8 @@ class Environment:
         return offset
 
     def _get_indices(self, t1: datetime, t2: datetime) -> List[int]:
+        print(t1)
+        print(t2)
         offset = self._time_slot_offset(t1)
         amount_of_time_slots = timeutil.datetimes_to_time_slots(t1, t2)
         indices = [x for x in list(range(amount_of_time_slots))]
@@ -69,6 +71,7 @@ class Environment:
 
     def _time_slot_free(self, license_: str, t1: datetime, t2: datetime) -> None:
         indices = self._get_indices(t1, t2)
+        print(indices)
         time_slots = self.cars_to_timeslots[license_]
         # Safety padding
         #   ->  keep at least one 15 minute slot free
@@ -422,8 +425,6 @@ if __name__ == "__main__":
     for car in cars:
         ret = env.add_car(car.license, car.model)
         print(ret)
-
-    print(env.cars_to_timeslots)
 
     print("######### CREATING BOOKINGS #############")
     for b in bookings:

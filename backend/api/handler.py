@@ -27,7 +27,5 @@ class RequestHandler:
         return bookings
 
     def handle_book_vehicle(self, start_time, end_time, distance, user_id, license=None, allow_car_pooling=True):
-        print(start_time)
-        print(end_time)
         return self.__env.add_booking(start_time, end_time,
                                       distance, user_id, allow_car_pooling)
