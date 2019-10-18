@@ -40,21 +40,22 @@ def api_create_user():
     last_name = data["last_name"]
     user_id = data["user_id"]
     password = data["password"]
-    success = _handler.create_user(first_name, last_name, user_id, password)
+    success = _handler.handle_create_user(
+        first_name, last_name, user_id, password)
     print(json.dumps(success))
     return json.dumps(success)
 
 
 @app.route("/get_bookings", methods=["GET"])
 def api_get_bookings():
-    pass
+    return json.dumps(_handler.handle_get_bookings())
 
 
 @app.route("/get_bookings_by_userid", methods=["GET"])
 def api_get_bookings_by_userid(user_id):
     data = request.json
     user_id = data["user_id"]
-    bookings = _handler.get_bookings_by_userid(user_id)
+    bookings = _handler.handle_get_bookings_by_userid(user_id)
     print(type(bookings))
     print(bookings)
     return json.loads(bookings)
