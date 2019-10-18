@@ -46,6 +46,9 @@ class Booking:
     def set_price(self, price: float) -> None:
         self.price = price
 
+    def add_cost(self, cost: float) -> None:
+        self.price += cost
+
     def add_tag(self, tag: str) -> None:
         self.tags.append(tag)
 
