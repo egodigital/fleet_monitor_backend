@@ -31,16 +31,30 @@ class Environment:
         self.users = []
         self.booking_system = BookingSystem()
 
+    def _time_slot_offset(t: datetime) -> int:
+        offset = timeutil.datetimes_to_time_slots(t, self.start_time)
+        return offset
+
+    def _book_time_slots(self, license_: str, t1: datetime, t2: datetime) -> None:
+        time_slots = self.cars_to_timeslots[license_]
+        offset = self._time_slot_offset(t1)
+        indices = timeutil.datetimes_to_time_slots(t1, t2)
+        for i in range(len(indices)):
+            time_slots[offset+i] = 1
+
+    def _free_time_slots(self, license_: str, t1: datetime, t2: datetime) -> None:
+        time_slots = self.cars_to_timeslots[license_]
+        offset = self._time_slot_offset(t1)
+        indices = timeutil.datetimes_to_time_slots(t1, t2)
+        for i in range(len(indices)):
+            time_slots[offset+i] = 0
+
     def _find_car(self, license_):
         for i in range(len(self.cars)):
             car = self.cars[i]
             if car.license == license_:
                 return i
         return -1
-
-    def _time_slot_offset(time: datetime) -> int:
-        offset = timeutil.datetimes_to_time_slots(time, self.start_time)
-        return offset
 
     def add_car(self, license_: str, model: str) -> None:
         n_cars = len(self.cars)
@@ -62,6 +76,7 @@ class Environment:
             self.last_car_booked = self.cars[idx-1].license
         del self.cars[idx]
         del self.cars_to_timeslots[idx]
+        self.booking_system.delete_booking_by_license(license_)
 
     def get_cars(self) -> List[Car]:
         return self.cars
@@ -121,6 +136,7 @@ class Environment:
     def remove_user(self, user_id: str) -> bool:
         idx = self._find_user(user_id)
         del self.users[idx]
+        self.booking_system.delete_booking_by_userid(user_id)
 
     def get_users(self) -> List[User]:
         return self.users
@@ -128,21 +144,10 @@ class Environment:
     def _find_booking(self, booking_id: str) -> Booking:
         return self.booking_system.get_booking_by_id(booking_id)
 
-    @staticmethod
-    def _book_time_slots(time_slots, indices):
-        for i in indices:
-            time_slots[i] = 1
-
-    @staticmethod
-    def _free_time_slots(time_slots, indices):
-        for i in indices:
-            time_slots[i] = 0
-
     def _retrieve_car_for_booking(self, new_booking: Booking, all_bookings: List[Booking]) -> Car:
         # TODO: Implement
         #
         # Availability depends on the fact
-        ifx
         for b in all_bookings:
 
         return car

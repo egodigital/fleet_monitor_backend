@@ -87,6 +87,15 @@ class BookingSystem:
         for id_ in ids:
             del self.__bookings[id_]
 
+    def delete_booking_by_userid(self, user_id):
+        ids = []
+        for id_, b in self.__bookings.items():
+            if b.user_id == user_id:
+                ids.append(id_)
+
+        for id_ in ids:
+            del self.__bookings[id_]
+
     def get_booking_by_id(self, booking_id):
         return self.__bookings[booking_id]
 
