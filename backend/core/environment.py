@@ -8,12 +8,11 @@ from .bookings import Booking
 from .bookings import BookingSystem
 from .car import Car
 from datetime import datetime
-from .globals import BOOKING_BASE_PRICE
-from .globals import COST_PER_KILOMETER
-from .globals import LATE_RETURN_MAX_PENALTY
+from .globals import BASE_PRICE
+from .globals import LATE_RETURN_FEE
+from .globals import LATE_RETURN_FEE_MAX
 from .globals import LOOK_AHEAD_TIME_SLOTS
 from .globals import LONELY_WOLF_THRESHOLD
-from .globals import PENALTY_LATE_CAR_RETURN
 from .user import User
 
 
@@ -175,6 +174,9 @@ class Environment:
     def _find_booking(self, booking_id: str) -> Booking:
         return self.booking_system.get_booking(booking_id)
 
+    def _get_prior_bookings(self):
+        pass
+
     def _retrieve_car_for_booking(self, new_booking: Booking, bookings: List[Booking]) -> Car:
         # Assign cars by round-robin principle
         # Also make sure the car is sufficiently
@@ -196,9 +198,7 @@ class Environment:
 
     def _update_preferences_and_nature(self, user_id: str) -> bool:
         status_changed: bool = False
-        preference = "Unknown"
-        nature = "Unknown"
-        bookings: List[Booking] = self.ball_bookingsooking_system.get_bookings_by_user_id(
+        bookings: List[Booking] = self.booking_system.get_bookings_by_user_id(
             user_id)
 
         n = len(bookings)
@@ -241,12 +241,15 @@ class Environment:
             ))
         if minutes_late > 0:
             booking.set_minutes_late(minutes_late)
-            keys = PENALTY_LATE_CAR_RETURN.keys()
+            keys = LATE_RETURN_FEE.keys()
             for i in range(keys) - 1:
                 if minutes_late > keys[i] and minutes_late < keys[i+1]:
                     price = booking.price
-                    booking.add_cost(price * PENALTY_LATE_CAR_RETURN[keys[i]])
+                    booking.add_cost(price * LATE_RETURN_FEE[keys[i]])
                     break
+        else:
+            pass
+
         self.booking_system.close_booking(booking_id)
 
     def delete_booking(self, booking_id: str) -> None:
