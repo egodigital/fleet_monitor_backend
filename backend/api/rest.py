@@ -82,7 +82,7 @@ def book_vehicle():
     user_id = data["user_id"]
     allow_car_pooling = data["allow_car_pooling"]
     ret = _handler.handle_book_vehicle(
-        data[start_time, end_time, distance, user_id, allow_car_pooling)
+        start_time, end_time, distance, user_id, allow_car_pooling)
     return jsonify(ret)
 
 
