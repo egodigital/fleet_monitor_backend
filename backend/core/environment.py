@@ -50,9 +50,10 @@ class Environment:
         return offset
 
     def _get_indices(self, t1: datetime, t2: datetime) -> List[int]:
+        offset = self._time_slot_offset(t1)
         print(t1)
         print(t2)
-        offset = self._time_slot_offset(t1)
+        print(offset)
         amount_of_time_slots = timeutil.datetimes_to_time_slots(t1, t2)
         indices = [x for x in list(range(amount_of_time_slots))]
         return [x + offset for x in indices]
@@ -403,8 +404,11 @@ class TestData:
             Car("License3", "Model3"),
         ]
 
+        # current date and time
+        now = timeutil.get_start_time()
+
         self.bookings = [
-            Booking(10000000, 10000900, 1000, "patrice")
+            Booking(10000, 10900, 1000, "patrice")
         ]
 
 

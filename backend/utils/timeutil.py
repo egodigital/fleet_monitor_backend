@@ -79,3 +79,8 @@ def get_start_time() -> datetime:
 
 def timestamp_to_datetime(timestamp: int) -> datetime:
     return datetime.fromtimestamp(timestamp)
+
+
+def datetime_to_timestamp(d: datetime) -> int:
+    timestamp = int(datetime.timestamp(now))
+    return timestamp
