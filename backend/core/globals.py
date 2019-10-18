@@ -23,3 +23,12 @@ AVERAGE_POWER_USED_PER_KILOMETER = POWER_CAR_FULLY_CHARGED / CAR_REACH_AT_FULL_C
 
 # unit [km]
 AVERAGE_SPEED = 35
+
+
+# Tags
+#
+# tag name -> description
+DEFAULT_TAGS = {
+    "Lebensmittel": "Die Person kauft während ihrer Buchung Lebensmittel ein",
+    ""
+}
