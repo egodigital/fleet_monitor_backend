@@ -288,7 +288,7 @@ class Environment:
     def get_users(self) -> List[User]:
         return self.users
 
-    def add_booking(self, datetime: str, end_time:
+    def add_booking(self, start_time: str, end_time:
                     datetime, distance: float, user_id: str,
                     license_: str = None, allow_car_pooling: bool = True) -> None:
         new_booking = Booking(start_time, end_time, distance,
