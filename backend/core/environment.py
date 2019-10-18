@@ -27,27 +27,47 @@ class Environment:
         self.cars = []
         self.cars_to_timeslots = defaultdict(list)
         self.start_time = timeutil.get_start_time()
-        self.last_car_booked = license_
+        self.last_car_booked = None
         self.users = []
         self.booking_system = BookingSystem()
 
-    def _time_slot_offset(t: datetime) -> int:
+    def _time_slot_offset(self, t: datetime) -> int:
         offset = timeutil.datetimes_to_time_slots(t, self.start_time)
         return offset
 
-    def _book_time_slots(self, license_: str, t1: datetime, t2: datetime) -> None:
-        time_slots = self.cars_to_timeslots[license_]
+    def _get_indices(self, t1: datetime, t2: datetime) -> List[int]:
         offset = self._time_slot_offset(t1)
         indices = timeutil.datetimes_to_time_slots(t1, t2)
-        for i in range(len(indices)):
-            time_slots[offset+i] = 1
+        return [x + offset for x in indices]
+
+    def _book_time_slots(self, license_: str, t1: datetime, t2: datetime) -> None:
+        indices = self._get_indices(t1, t2)
+        time_slots = self.cars_to_timeslots[license_]
+        for i in indices:
+            time_slots[i] = 1
 
     def _free_time_slots(self, license_: str, t1: datetime, t2: datetime) -> None:
+        indices = self._get_indices(t1, t2)
         time_slots = self.cars_to_timeslots[license_]
-        offset = self._time_slot_offset(t1)
-        indices = timeutil.datetimes_to_time_slots(t1, t2)
-        for i in range(len(indices)):
-            time_slots[offset+i] = 0
+        for i in indices:
+            time_slots[i] = 0
+
+    def _time_slot_free(self, license_: str, t1: datetime, t2: datetime) -> None:
+        indices = self._get_indices(t1, t2)
+        time_slots = self.cars_to_timeslots[license_]
+        # Safety padding
+        #   ->  keep at least one 15 minute slot free
+        #       before and after the booking
+        if time_slots[indices[0] - 1] == 1:
+            return False
+
+        if time_slots[indices[len(indices) - 1] + 1] == 1:
+            return False
+
+        for i in indices:
+            if time_slots[i] == 1:
+                return False
+        return True
 
     def _find_car(self, license_):
         for i in range(len(self.cars)):
@@ -136,6 +156,12 @@ class Environment:
     def remove_user(self, user_id: str) -> bool:
         idx = self._find_user(user_id)
         del self.users[idx]
+        bookings = self.booking_system.get_bookings_by_user_id(user_id)
+        for b in bookings:
+            license_ = b.license
+            start_time = b.start_time
+            end_time = b.end_time
+            self._free_time_slots(license_, start_time, end_time)
         self.booking_system.delete_bookings_by_userid(user_id)
 
     def get_users(self) -> List[User]:
@@ -144,22 +170,30 @@ class Environment:
     def _find_booking(self, booking_id: str) -> Booking:
         return self.booking_system.get_booking(booking_id)
 
-    def _retrieve_car_for_booking(self, new_booking: Booking, all_bookings: List[Booking]) -> Car:
-        # TODO: Implement
-        #
-        # Availability depends on the fact
-        for b in all_bookings:
+    def _retrieve_car_for_booking(self, new_booking: Booking, bookings: List[Booking]) -> Car:
+        # Assign cars by round-robin principle
+        # Also make sure the car is sufficiently
+        # charged.
+        n_cars = len(self.cars)
+        idx = self._find_car(self.last_car_booked)
+        indices = [(idx + i) % n_cars for i in range(n_cars)]
+        start_time = new_booking.start_time
+        end_time = new_booking.end_time
+        for i in indices:
+            car = self.cars[i]
+            license_ = self.cars[i].license
+            if self._time_slot_free(license_, start_time, end_time):
+                return car
+        return None
 
-        return car
-
-    def _get_price(self, new_booking: Booking, all_bookings: List[Booking]) -> float:
+    def _get_price(self, new_booking: Booking, bookings: List[Booking]) -> float:
         return 1
 
     def _update_preferences_and_nature(self, user_id: str) -> bool:
         status_changed: bool = False
         preference = "Unknown"
         nature = "Unknown"
-        bookings: List[Booking] = self.booking_system.get_bookings_by_user_id(
+        bookings: List[Booking] = self.ball_bookingsooking_system.get_bookings_by_user_id(
             user_id)
 
         n = len(bookings)
@@ -180,16 +214,14 @@ class Environment:
                     allow_car_pooling: bool = True) -> None:
         new_booking = Booking(start_time, end_time, distance,
                               user_id, license_, allow_car_pooling)
-        all_bookings = self.booking_system.get_all_bookings()
-        car = self._retrieve_car_for_booking(new_booking, all_bookings)
+        bookings = self.booking_system.get_all_bookings()
+        car = self._retrieve_car_for_booking(new_booking, bookings)
         if car is not None:
-            id_ = self.booking_system.add_booking(
-                Booking(start_time, end_time, distance,
-                        user_id, allow_car_pooling)
-            )
-            price = self._get_price(new_booking, all_bookings)
-            self._update_preferences_and_nature(
-                user_id)
+            new_booking.set_license(car.license)
+            self.last_car_booked = car.license
+            id_ = self.booking_system.add_booking(new_booking)
+            price = self._get_price(new_booking, bookings)
+            self._update_preferences_and_nature(user_id)
             return id_, price, car
         return None, -1, None
 
@@ -213,6 +245,11 @@ class Environment:
         self.booking_system.close_booking(booking_id)
 
     def delete_booking(self, booking_id: str) -> None:
+        booking = self.booking_system.get_booking(booking_id)
+        license_ = booking.license
+        start_time = booking.start_time
+        end_time = booking.end_time
+        self._free_time_slots(license_, start_time, end_time)
         self.booking_system.delete_booking(booking_id)
 
     def add_tag_to_booking(self, booking_id, tag):
