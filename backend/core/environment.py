@@ -75,12 +75,13 @@ class Environment:
         #       before and after the booking
         start_idx = indices[0]
         n = len(indices)
+
         # Check begging of time slot
         if start_idx != 0:
             if time_slots[start_idx - 1] == 1:
                 return False
         elif start_idx == 0:
-            if time_slots[1] == 1:
+            if time_slots[0] == 1 or time_slots[1] == 1:
                 return False
 
         # Check end of time slot
@@ -104,8 +105,6 @@ class Environment:
         # conservative estimate
         b1 = self._time_slot_free(license_, t1, t2)
         b2 = self._enough_charge(license_, t1, distance)
-        print(b1)
-        print(b2)
         return b1 and b2
 
     def _get_prior_bookings_of_car(self, license_: str, t1: datetime) -> List[Booking]:
@@ -133,6 +132,7 @@ class Environment:
             car = self.cars[i]
             license_ = self.cars[i].license
             if self._time_slot_available(license_, start_time, end_time, distance):
+                self._book_time_slots(license_, start_time, end_time)
                 return car
         return None
 
@@ -409,7 +409,10 @@ class TestData:
         now = timeutil.get_start_time()
         timestamp = timeutil.datetime_to_timestamp(now)
         self.bookings = [
-            Booking(timestamp, timestamp + 900, 20, "patrice")
+            Booking(timestamp, timestamp + 900, 20, "patrice"),
+            Booking(timestamp, timestamp + 900, 20, "patrice"),
+            Booking(timestamp, timestamp + 900, 20, "patrice"),
+            Booking(timestamp, timestamp + 900, 20, "patrice"),
         ]
 
 
