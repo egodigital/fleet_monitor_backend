@@ -13,7 +13,7 @@ class Booking:
     """
 
     def __init__(self, start_time: str, end_time: str,
-                 distance: float, user_id: str, license_,
+                 distance: float, user_id: str, license_: str = None,
                  allow_car_pooling:
                  bool = True) -> None:
         self.start_time = datetime(start_time)
@@ -36,6 +36,9 @@ class Booking:
 
     def set_distance(self, distance: float) -> None:
         self.distance = distance
+
+    def set_license(self, license_: str) -> None:
+        self.license = license_
 
     def set_car_pooling_option(self, allow_car_pooling: bool) -> None:
         self.allow_car_pooling = allow_car_pooling

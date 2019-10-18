@@ -114,11 +114,11 @@ class Environment:
     def _find_booking(self, booking_id: str) -> Booking:
         return self.booking_system.get_booking_by_id(booking_id)
 
-    def _check_booking_allowed(self, new_booking, all_bookings):
+    def _retrieve_car_for_booking(self, new_booking: Booking, all_bookings: List[Booking]) -> Car:
         # TODO: Implement
         #
         # Availability depends on the fact
-        return True
+        return car
 
     def _get_price(self, new_booking: Booking, all_bookings: List[Booking]) -> float:
         return 1
@@ -144,40 +144,39 @@ class Environment:
         return status_changed
 
     def add_booking(self, start_time: str, end_time: str,
-                    distance: float, user_id: str,
-                    allow_car_pooling:
-                    bool = True) -> None:
+                    distance: float, user_id: str, license_: str = None,
+                    allow_car_pooling: bool = True) -> None:
         new_booking = Booking(start_time, end_time, distance,
-                              user_id, allow_car_pooling)
+                              user_id, license_, allow_car_pooling)
         all_bookings = self.booking_system.get_all_bookings()
-        can_be_booked = self._check_booking_allowed(new_booking, all_bookings)
-        if can_be_booked:
+        car = self._retrieve_car_for_booking(new_booking, all_bookings)
+        if car is not None:
             id_ = self.booking_system.add_booking(
                 Booking(start_time, end_time, distance,
                         user_id, allow_car_pooling)
             )
             price = self._get_price(new_booking, all_bookings)
-            user_status_updated =
             self._update_preferences_and_nature(
                 user_id)
-            return id_, price, user_status_updated
-        return None, -1, False
+            return id_, price, car
+        return None, -1, None
 
     def close_booking(self, booking_id: str, handover_time: str):
-        booking_system.close_booking(booking_id)
+        self.booking_system.close_booking(booking_id)
         booking: Booking = self.booking_system.get_booking_by_id(booking_id)
         handover_time = datetime(handover_time)
         end_time = booking.end_time
         minutes_late = timeutil.time_slots_to_minutes(
             timeutil.datetimes_to_time_slots(
-                handover_time - end_time
+                handover_time, end_time
             ))
         if minutes_late > 0:
             booking.set_minutes_late(minutes_late)
             keys = PENALTY_LATE_CAR_RETURN.keys()
             for i in range(keys) - 1:
                 if minutes_late > keys[i] and minutes_late < keys[i+1]:
-                    booking.add_cost(PENALTY_LATE_CAR_RETURN[keys[i]])
+                    price = booking.price
+                    booking.add_cost(price * PENALTY_LATE_CAR_RETURN[keys[i]])
                     break
         self.booking_system.close_booking(booking_id)
 
