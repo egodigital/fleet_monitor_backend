@@ -1,4 +1,5 @@
 from typing import List
+from collections import defaultdict
 
 from backend.definitions import get_prj_root
 from backend.utils import timeutil
@@ -10,6 +11,7 @@ from datetime import datetime
 from .globals import BOOKING_BASE_PRICE
 from .globals import COST_PER_KILOMETER
 from .globals import LATE_RETURN_MAX_PENALTY
+from .globals import LOOK_AHEAD_TIME_SLOTS
 from .globals import LONELY_WOLF_THRESHOLD
 from .globals import PENALTY_LATE_CAR_RETURN
 from .user import User
@@ -23,6 +25,9 @@ class Environment:
 
     def __init__(self) -> None:
         self.cars = []
+        self.cars_to_timeslots = defaultdict(list)
+        self.start_time = timeutil.get_start_time()
+        self.last_car_booked = license_
         self.users = []
         self.booking_system = BookingSystem()
 
@@ -33,8 +38,15 @@ class Environment:
                 return i
         return -1
 
+    def _time_slot_offset(time: datetime) -> int:
+        offset = timeutil.datetimes_to_time_slots(time, self.start_time)
+        return offset
+
     def add_car(self, license_: str, model: str) -> None:
-        self.cars.append(Car(license_, model))
+        n_cars = len(self.cars)
+        car = Car(license_, model)
+        self.cars.append(car)
+        self.cars_to_timeslots[license_] = list(range(LOOK_AHEAD_TIME_SLOTS))
 
     def update_car_information(self, license_: str, range_: str = None, in_repair: bool = None) -> None:
         idx = self._find_car(license_)
@@ -46,7 +58,10 @@ class Environment:
 
     def remove_car(self, license_: str) -> bool:
         idx = self._find_car(license_)
+        if license_ == self.last_car_booked:
+            self.last_car_booked = self.cars[idx-1].license
         del self.cars[idx]
+        del self.cars_to_timeslots[idx]
 
     def get_cars(self) -> List[Car]:
         return self.cars
@@ -82,8 +97,7 @@ class Environment:
         return False
 
     def update_user_information(self, user_id: str, last_name:
-                                str = None, password: str = None, occupation: str =
-                                None, phone_number: str = None, share_social_status:
+                                str = None, password: str = None, occupation: str = None, phone_number: str = None, share_social_status:
                                 bool = None, share_behavioural_status: str = None,
                                 share_booking_data: str = None) -> None:
         idx = self._find_user(user_id)
@@ -114,10 +128,23 @@ class Environment:
     def _find_booking(self, booking_id: str) -> Booking:
         return self.booking_system.get_booking_by_id(booking_id)
 
+    @staticmethod
+    def _book_time_slots(time_slots, indices):
+        for i in indices:
+            time_slots[i] = 1
+
+    @staticmethod
+    def _free_time_slots(time_slots, indices):
+        for i in indices:
+            time_slots[i] = 0
+
     def _retrieve_car_for_booking(self, new_booking: Booking, all_bookings: List[Booking]) -> Car:
         # TODO: Implement
         #
         # Availability depends on the fact
+        ifx
+        for b in all_bookings:
+
         return car
 
     def _get_price(self, new_booking: Booking, all_bookings: List[Booking]) -> float:
