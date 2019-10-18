@@ -78,6 +78,11 @@ class BookingSystem:
     def delete_booking(self, id_: str) -> None:
         del self.__bookings[id_]
 
+    def delete_booking_by_license(self, license_):
+        for id_, b in self.__bookings.items():
+            if b.license == license_:
+                del self.__bookings[id_]
+
     def get_booking_by_id(self, booking_id):
         return self.__bookings[booking_id]
 
