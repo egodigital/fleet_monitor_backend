@@ -69,10 +69,60 @@ class Environment:
                 return False
         return True
 
+    def _get_prior_bookings_of_car(self, license_: str, t1: datetime) -> List[Booking]:
+        pass
+
+    def _find_booking(self, booking_id: str) -> Booking:
+        return self.booking_system.get_booking(booking_id)
+
+    def _retrieve_car_for_booking(self, new_booking: Booking, bookings: List[Booking]) -> Car:
+        # Assign cars by round-robin principle
+        # Also make sure the car is sufficiently
+        # charged.
+        n_cars = len(self.cars)
+        idx = self._find_car(self.last_car_booked)
+        indices = [(idx + i) % n_cars for i in range(n_cars)]
+        start_time = new_booking.start_time
+        end_time = new_booking.end_time
+        for i in indices:
+            car = self.cars[i]
+            license_ = self.cars[i].license
+            if self._time_slot_free(license_, start_time, end_time):
+                return car
+        return None
+
+    def _get_price(self, new_booking: Booking, bookings: List[Booking]) -> float:
+        return 1
+
+    def _update_preferences_and_nature(self, user_id: str) -> bool:
+        status_changed: bool = False
+        bookings: List[Booking] = self.booking_system.get_bookings_by_user_id(
+            user_id)
+
+        n = len(bookings)
+        n_car_pooled = sum(int(b.allow_car_pooling) for b in bookings)
+
+        if n_car_pooled/n < LONELY_WOLF_THRESHOLD:
+            idx = self._find_user(user_id)
+            user = self.users[idx]
+            user.behavioural_status.nature = "Lonely Wolf"
+            status_changed = True
+
+        # TODO: Figure out if user is economical, ecological
+        # or efficient
+        return status_changed
+
     def _find_car(self, license_: str) -> int:
         for i in range(len(self.cars)):
             car = self.cars[i]
             if car.license == license_:
+                return i
+        return -1
+
+    def _find_user(self, user_id: str) -> int:
+        for i in range(len(self.users)):
+            user = self.users[i]
+            if user.credentials.user_id == user_id:
                 return i
         return -1
 
@@ -104,13 +154,6 @@ class Environment:
 
     def get_cars(self) -> List[Car]:
         return self.cars
-
-    def _find_user(self, user_id: str) -> int:
-        for i in range(len(self.users)):
-            user = self.users[i]
-            if user.credentials.user_id == user_id:
-                return i
-        return -1
 
     def add_user(self, first_name: str, last_name:
                  str, user_id: str, password: str,
@@ -170,49 +213,6 @@ class Environment:
 
     def get_users(self) -> List[User]:
         return self.users
-
-    def _find_booking(self, booking_id: str) -> Booking:
-        return self.booking_system.get_booking(booking_id)
-
-    def _get_prior_bookings(self):
-        pass
-
-    def _retrieve_car_for_booking(self, new_booking: Booking, bookings: List[Booking]) -> Car:
-        # Assign cars by round-robin principle
-        # Also make sure the car is sufficiently
-        # charged.
-        n_cars = len(self.cars)
-        idx = self._find_car(self.last_car_booked)
-        indices = [(idx + i) % n_cars for i in range(n_cars)]
-        start_time = new_booking.start_time
-        end_time = new_booking.end_time
-        for i in indices:
-            car = self.cars[i]
-            license_ = self.cars[i].license
-            if self._time_slot_free(license_, start_time, end_time):
-                return car
-        return None
-
-    def _get_price(self, new_booking: Booking, bookings: List[Booking]) -> float:
-        return 1
-
-    def _update_preferences_and_nature(self, user_id: str) -> bool:
-        status_changed: bool = False
-        bookings: List[Booking] = self.booking_system.get_bookings_by_user_id(
-            user_id)
-
-        n = len(bookings)
-        n_car_pooled = sum(int(b.allow_car_pooling) for b in bookings)
-
-        if n_car_pooled/n < LONELY_WOLF_THRESHOLD:
-            idx = self._find_user(user_id)
-            user = self.users[idx]
-            user.behavioural_status.nature = "Lonely Wolf"
-            status_changed = True
-
-        # TODO: Figure out if user is economical, ecological
-        # or efficient
-        return status_changed
 
     def add_booking(self, start_time: str, end_time: str,
                     distance: float, user_id: str, license_: str = None,
