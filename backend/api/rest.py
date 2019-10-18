@@ -35,11 +35,14 @@ def print_app_info():
 
 @app.route("/create_user", methods=["POST"])
 def api_create_user():
-    data = request.data
+    data = request.json
     first_name = data["first_name"]
     last_name = data["last_name"]
     user_id = data["user_id"]
-    return _handler.create_user(first_name, last_name, user_id)
+    password = data["password"]
+    success = _handler.create_user(first_name, last_name, user_id, password)
+    print(json.dumps(success))
+    return json.dumps(success)
 
 
 @app.route("/get_bookings", methods=["GET"])
@@ -49,7 +52,7 @@ def api_get_bookings():
 
 @app.route("/get_bookings_by_userid", methods=["GET"])
 def api_get_bookings_by_userid(user_id):
-    data = request.data
+    data = request.json
     user_id = data["user_id"]
     bookings = _handler.get_bookings_by_userid(user_id)
     print(type(bookings))
