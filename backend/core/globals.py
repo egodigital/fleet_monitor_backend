@@ -37,10 +37,15 @@ BONUS_POINT_TO_FREE_RIDE_EQUIVALENT = 100
 FEATURE_DISCOVERY_MAX = 10
 
 # --- Globals related to price function
+
+# Additional percentage on price
 PRICE_SURPLUS_OF_NO_CARPOOLING_RIDES = 0.2
 
+# unit [cents]
 _DISTANCE_PRICE_FACTOR = 0.5
+# unit [cents]
 _TIME_SLOT_PRICE_FACTOR = 0.01
+# unit [cents]
 _BONUS_POINT_PRICE_FACTOR = 0.2
 
 
@@ -60,6 +65,7 @@ def BONUS_POINT_PRICE_DISCOUNT(bonus_points):
     return _BONUS_POINT_PRICE_FACTOR * bonus_points / 1000
 
 
+# Additional percentage on price
 LATE_RETURN_FEE_MAX = 0.2
 LATE_RETURN_FEE = {
     5: 0.05,
