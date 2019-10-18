@@ -33,10 +33,6 @@ class User:
     Class to store user data.s
     """
 
-    def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__,
-                          sort_keys=True)
-
     def __init__(self, first_name: str, last_name: str,
                  user_id: str, password: str = "", occupation: str = "",
                  phone_number: str = "", share_social_status:
