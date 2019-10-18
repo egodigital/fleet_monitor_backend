@@ -11,6 +11,8 @@ from backend.api.swagger_client.api.environments_api import EnvironmentsApi
 from backend.api.swagger_client.api.vehicles_api import VehiclesApi
 from backend.api.swagger_client.api_client import ApiClient
 
+from backend.utils import timeutil
+
 from flask import Flask, jsonify
 from flask import make_response
 from flask import request
@@ -76,8 +78,8 @@ def api_get_bookings_by_userid():
 @app.route("/book_vehicle", methods=["POST"])
 def book_vehicle():
     data = request.json
-    start_time = data["start_time"]
-    end_time = data["end_time"]
+    start_time = timeutil.timestamp_to_datetime(["start_time"])
+    end_time = timeutil.timestamp_to_datetime(data["end_time"])
     distance = data["distance"]
     user_id = data["user_id"]
     allow_car_pooling = data["allow_car_pooling"]

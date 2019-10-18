@@ -12,12 +12,12 @@ class Booking:
     Class abstracts a car booking.
     """
 
-    def __init__(self, start_time: str, end_time: str,
+    def __init__(self, start_time: datetime, datetime: str,
                  distance: float, user_id: str, license_: str = None,
                  allow_car_pooling:
                  bool = True) -> None:
-        self.start_time = datetime(start_time)
-        self.end_time = datetime(end_time)
+        self.start_time = start_time
+        self.end_time = end_time
         self.distance = distance
         # TODO: Implement carpooling such that more than
         # one user can be assigned to a booking
