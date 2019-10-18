@@ -32,7 +32,7 @@ class User:
     """
 
     def __init__(self, first_name: str, last_name: str,
-                 user_id: str, password: str, occupation: str = "",
+                 user_id: str, password: str = "", occupation: str = "",
                  phone_number: str = "", share_social_status:
                  bool = False, share_behavioural_status: bool =
                  False, share_booking_data: bool = False) -> None:

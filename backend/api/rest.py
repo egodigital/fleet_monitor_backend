@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 
@@ -12,7 +13,7 @@ from flask import Flask, jsonify
 from flask import make_response
 from flask import request
 
-from backend.api import handler
+from backend.api.handler import RequestHandler
 
 # API key
 API_KEY = "07fb13b8-176a-4c9d-bfe6-9831271e3fac"
@@ -21,13 +22,24 @@ API_KEY = "07fb13b8-176a-4c9d-bfe6-9831271e3fac"
 client = ApiClient()
 environment = EnvironmentsApi(client)
 vehicles = VehiclesApi(client)
-
 app = Flask(__name__)
+
+# Request handler
+_handler = RequestHandler()
 
 
 @app.route("/")
 def print_app_info():
     return jsonify({"about": "This is the fleet monitor app"})
+
+
+@app.route("/create_user", methods=["POST"])
+def api_create_user():
+    data = request.data
+    first_name = data["first_name"]
+    last_name = data["last_name"]
+    user_id = data["user_id"]
+    return _handler.create_user(first_name, last_name, user_id)
 
 
 @app.route("/get_bookings", methods=["GET"])
@@ -36,14 +48,19 @@ def api_get_bookings():
 
 
 @app.route("/get_bookings_by_userid", methods=["GET"])
-def api_get_bookings_by_userid():
-    pass
+def api_get_bookings_by_userid(user_id):
+    data = request.data
+    user_id = data["user_id"]
+    bookings = _handler.get_bookings_by_userid(user_id)
+    print(type(bookings))
+    print(bookings)
+    return json.loads(bookings)
 
 
 @app.route("/book_vehicle", methods=["POST"])
 def book_vehicle(start_time, end_time, user_id):
     data = request.data
-    return handler.handle_book_vehicle(data["start_time"], data["end_time"], data["user_id"])
+    # return _handler.handle_book_vehicle(data["start_time"], data["end_time"], data["user_id"])
 
 
 @app.errorhandler(404)

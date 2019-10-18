@@ -230,7 +230,7 @@ class Environment:
         return self.cars
 
     def add_user(self, first_name: str, last_name:
-                 str, user_id: str, password: str,
+                 str, user_id: str, password: str = "",
                  occupation: str = "",
                  phone_number: str = "", share_social_data:
                  bool = False, share_behavioural_data: bool = False, share_booking_data: bool = False) -> bool:
