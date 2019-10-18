@@ -268,9 +268,13 @@ class Environment:
             user = self._get_user_by_id(user_id)
             self.last_car_booked = car.license
             id_ = self.booking_system.add_booking(new_booking)
-            # Determine price of booking based on a fine tuned
-            # pricing function
-            price = self._get_estimated_price(new_booking, bookings)
+            # User has free ride available
+            if user.free_rides > 0:
+                price = 0
+                user.free_rides -= 1
+            # Price determined by fine-tuned price function
+            else:
+                price = self._get_estimated_price(new_booking, bookings)
             # Update user stats
             self._update_preferences_and_nature(user_id)
             return id_, price, car
