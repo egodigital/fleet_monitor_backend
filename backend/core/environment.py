@@ -70,7 +70,7 @@ class Environment:
         return True
 
     def _get_prior_bookings_of_car(self, license_: str, t1: datetime) -> List[Booking]:
-        pass
+        idx = self._find_car(license_)
 
     def _find_booking(self, booking_id: str) -> Booking:
         return self.booking_system.get_booking(booking_id)
