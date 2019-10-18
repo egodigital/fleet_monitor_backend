@@ -48,12 +48,13 @@ def api_create_user():
 
 @app.route("/get_users", methods=["GET"])
 def api_get_users():
-    return json.dumps(_handler.handle_get_users())
+    print(len(_handler.handle_get_users()))
+    return json.dumps(dict(_handler.handle_get_users()))
 
 
 @app.route("/get_bookings", methods=["GET"])
 def api_get_bookings():
-    return json.dumps(_handler.handle_get_bookings())
+    return json.dumps(dict(_handler.handle_get_bookings()))
 
 
 @app.route("/get_bookings_by_userid", methods=["GET"])
@@ -61,8 +62,6 @@ def api_get_bookings_by_userid(user_id):
     data = request.json
     user_id = data["user_id"]
     bookings = _handler.handle_get_bookings_by_userid(user_id)
-    print(type(bookings))
-    print(bookings)
     return json.loads(bookings)
 
 

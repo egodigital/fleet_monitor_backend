@@ -207,7 +207,7 @@ class Environment:
         self.cars_to_timeslots[license_] = list(range(LOOK_AHEAD_TIME_SLOTS))
 
     def update_car_information(self, license_: str, range_: str = None, in_repair: bool = None) -> None:
-        icar = self._get_car_by_license(license_)
+        car = self._get_car_by_license(license_)
         if range_ is not None:
             car.set_range(range_)
         if in_repair is not None:
