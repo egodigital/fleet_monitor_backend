@@ -1,7 +1,6 @@
 from backend.definitions import get_prj_root
 
 from .bookings import Booking
-from .bookings import BookingInformation
 from .bookings import BookingSystem
 from .car import Car
 from .user import User
@@ -100,17 +99,31 @@ class Environment:
     def _find_booking(self, booking_id):
         return self.booking_system.get_booking_by_id(booking_id)
 
+    def _check_booking_allowed(self, new_booking, all_bookings):
+        # TODO: Implement
+        #
+        # Availability depends on the fact
+        return True
+
+    def _estimate_price(self, new_booking, all_bookings):
+        return 1
+
     def add_booking(self, start_time: str, end_time: str,
                     distance: float, user_id: str,
                     allow_car_pooling:
                     bool = True) -> None:
-        booking_info = BookingInformation(
-            start_time, end_time, distance, user_id, allow_car_pooling
-        )
-        id_ = self.booking_system.add_booking(
-            Booking(booking_info)
-        )
-        return id_
+        new_booking = Booking(start_time, end_time, distance,
+                              user_id, allow_car_pooling)
+        all_bookings = self.booking_system.get_all_bookings()
+        can_be_booked = self._check_booking_allowed(new_booking, all_bookings)
+        if can_be_booked:
+            id_ = self.booking_system.add_booking(
+                Booking(start_time, end_time, distance,
+                        user_id, allow_car_pooling)
+            )
+            price = self._estimate_price(new_booking, all_bookings)
+            return id_, price
+        return None, -1
 
     def delete_booking(self, booking_id) -> None:
         self.booking_system.delete_booking(booking_id)
