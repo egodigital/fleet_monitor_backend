@@ -10,6 +10,7 @@ from .car import Car
 from datetime import datetime
 from .globals import BASE_PRICE
 from .globals import BATTERY_CONSERVATIVE_FACTOR
+from .globals import BONUS_POINT_PRICE_DISCOUNT
 from .globals import LATE_RETURN_FEE
 from .globals import LATE_RETURN_FEE_MAX
 from .globals import LOOK_AHEAD_TIME_SLOTS
@@ -112,8 +113,19 @@ class Environment:
                 return car
         return None
 
-    def _get_price(self, new_booking: Booking, bookings: List[Booking]) -> float:
-        return 1
+    def _get_estimated_price(self, new_booking: Booking, bookings: List[Booking]) -> float:
+        start_time = new_booking.start_time
+        end_time = new_booking.end_time
+        distance = new_booking.distance
+        user = self.users[self._find_user(new_booking.user_id)]
+        amount_time_slots = timeutil.datetimes_to_time_slots(
+            start_time, end_time)
+
+        base_price = BASE_PRICE(distance, amount_time_slots)
+
+        discount = BONUS_POINT_PRICE_DISCOUNT(user.bonus_points)
+
+        return base_price - discount
 
     def _update_preferences_and_nature(self, user_id: str) -> bool:
         status_changed: bool = False
@@ -248,7 +260,7 @@ class Environment:
             id_ = self.booking_system.add_booking(new_booking)
             # Determine price of booking based on a fine tuned
             # pricing function
-            price = self._get_price(new_booking, bookings)
+            price = self._get_estimated_price(new_booking, bookings)
             # Update user stats
             self._update_preferences_and_nature(user_id)
             return id_, price, car

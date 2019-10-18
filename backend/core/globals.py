@@ -37,20 +37,25 @@ BONUS_POINT_TO_FREE_RIDE_EQUIVALENT = 100
 FEATURE_DISCOVERY_MAX = 10
 
 # --- Globals related to price function
-_ALPHA = 0.5
-_BETA = 0.1
+_DISTANCE_PRICE_FACTOR = 0.5
+_TIME_SLOT_PRICE_FACTOR = 0.1
+_BONUS_POINT_PRICE_FACTOR = 0.2
 
 
 def _DISTANCE_COST(distance):
-    return _ALPHA * distance
+    return _DISTANCE_PRICE_FACTOR * distance
 
 
 def _TIME_COST(amount_time_slots):
-    return _BETA * exp(amount_time_slots)
+    return _TIME_SLOT_PRICE_FACTOR * exp(amount_time_slots)
 
 
 def BASE_PRICE(distance, amount_time_slots):
     return _DISTANCE_COST(distance) + _TIME_COST(amount_time_slots)
+
+
+def BONUS_POINT_PRICE_DISCOUNT(bonus_points):
+    return _BONUS_POINT_PRICE_FACTOR * bonus_points / 1000
 
 
 LATE_RETURN_FEE_MAX = 0.2
