@@ -46,6 +46,11 @@ def api_create_user():
     return json.dumps(success)
 
 
+@app.route("/get_users", methods=["GET"])
+def api_get_users():
+    return json.dumps(_handler.handle_get_users())
+
+
 @app.route("/get_bookings", methods=["GET"])
 def api_get_bookings():
     return json.dumps(_handler.handle_get_bookings())
