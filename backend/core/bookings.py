@@ -12,7 +12,7 @@ class Booking:
     Class abstracts a car booking.
     """
 
-    def __init__(self, start_time: datetime, datetime: str,
+    def __init__(self, start_time: datetime, end_time: datetime,
                  distance: float, user_id: str, license_: str = None,
                  allow_car_pooling:
                  bool = True) -> None:
