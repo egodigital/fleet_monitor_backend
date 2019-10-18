@@ -31,8 +31,8 @@ class User:
 
     def __init__(self, first_name: str, last_name: str,
                  user_id: str, password: str, occupation: str = "",
-                 phone_number: str = "", share_social_data:
-                 bool = False, share_behavioural_data: bool =
+                 phone_number: str = "", share_social_status:
+                 bool = False, share_behavioural_status: bool =
                  False, share_booking_data: bool = False) -> None:
         self.first_name = first_name
         self.last_name = last_name
@@ -42,8 +42,8 @@ class User:
         self.bonus = 0
         self.feature_discovery = 0
         self.free_rides = 0
-        self.share_social_data = share_social_data
-        self.share_behavioural_data = share_behavioural_data
+        self.share_social_status = share_social_status
+        self.share_behavioural_status = share_behavioural_status
         self.share_booking_data = share_booking_data
         self.social_status = SocialStatus()
         self.behavioural_status = BehaviouralStatus()
@@ -80,14 +80,14 @@ class User:
     def take_free_ride(self):
         self.free_rides -= 1
 
-    def set_share_social_data(self, share=False):
-        self.share_social_data = share
+    def set_share_social_status(self, share=False):
+        self.share_social_status = share
 
-    def set_share_behavioural_data(self, share=False):
-        self.share_behavioural_data = share
+    def set_share_behavioural_status(self, share=False):
+        self.share_behavioural_status = share
 
     def set_share_booking_data(self, share=False):
-        pass
+        self.share_booking_data = share
 
     def increment_friends(self):
         self.social_status.friends += 1
