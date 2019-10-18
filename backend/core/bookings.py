@@ -69,7 +69,7 @@ class BookingSystem:
 
     def add_booking(self, booking: Booking) -> str:
         id_ = id_ = str(uuid.uuid1())
-        self.__bookings[id_] = booking
+        self.__bookings[id_] = bookin.__bookings[id_] = booking
         return id_
 
     def close_booking(self, booking_id):
