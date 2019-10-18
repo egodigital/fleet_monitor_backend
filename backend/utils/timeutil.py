@@ -82,5 +82,5 @@ def timestamp_to_datetime(timestamp: int) -> datetime:
 
 
 def datetime_to_timestamp(d: datetime) -> int:
-    timestamp = int(datetime.timestamp(now))
+    timestamp = int(datetime.timestamp(d))
     return timestamp
