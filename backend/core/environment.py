@@ -231,8 +231,14 @@ class Environment:
         return None, -1, None
 
     def close_booking(self, booking_id: str, handover_time: str):
-        self.booking_system.close_booking(booking_id)
         booking: Booking = self.booking_system.get_booking(booking_id)
+        # Update the cars range
+        license_ = booking.license
+        distance = booking.distance
+        idx = self._find_car(license_)
+        self.cars[idx].range -= distance
+
+        # Check if the car is returned in time
         handover_time = datetime(handover_time)
         end_time = booking.end_time
         minutes_late = timeutil.time_slots_to_minutes(
