@@ -13,7 +13,7 @@ class BookingInformation:
     """
 
     def __init__(self, start_time: str, end_time: str,
-                 distance: int, user_id: str,
+                 distance: float, user_id: str,
                  allow_car_pooling:
                  bool = True) -> None:
         self.start_time = start_time
