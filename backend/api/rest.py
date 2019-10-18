@@ -1,4 +1,6 @@
-import json
+# import json
+from collections import defaultdict
+import simplejson as json
 import os
 import sys
 
@@ -12,6 +14,7 @@ from backend.api.swagger_client.api_client import ApiClient
 from flask import Flask, jsonify
 from flask import make_response
 from flask import request
+from flask import Response
 
 from backend.api.handler import RequestHandler
 
@@ -42,19 +45,24 @@ def api_create_user():
     password = data["password"]
     success = _handler.handle_create_user(
         first_name, last_name, user_id, password)
-    print(json.dumps(success))
-    return json.dumps(success)
+    return jsonify(success)
 
 
 @app.route("/get_users", methods=["GET"])
 def api_get_users():
-    print(len(_handler.handle_get_users()))
-    return json.dumps(dict(_handler.handle_get_users()))
+    users = _handler.handle_get_users()
+    d = defaultdict(dict)
+    for user in users:
+        user_id = user.credentials.user_id
+        d[user_id]["first_name"] = user.first_name
+        d[user_id]["last_name"] = user.last_name
+        d[user_id]["password"] = user.credentials.password
+    return jsonify(d)
 
 
 @app.route("/get_bookings", methods=["GET"])
 def api_get_bookings():
-    return json.dumps(dict(_handler.handle_get_bookings()))
+    return jsonify(_handler.handle_get_bookings())
 
 
 @app.route("/get_bookings_by_userid", methods=["GET"])
@@ -62,7 +70,7 @@ def api_get_bookings_by_userid(user_id):
     data = request.json
     user_id = data["user_id"]
     bookings = _handler.handle_get_bookings_by_userid(user_id)
-    return json.loads(bookings)
+    return jsonify(bookings)
 
 
 @app.route("/book_vehicle", methods=["POST"])
