@@ -7,6 +7,7 @@ MINUTE_TO_TIME_SLOT_FACTOR = 1 / SMALLEST_TIME_UNIT
 TIME_SLOT_TO_MINUTE_FACTOR = SMALLEST_TIME_UNIT
 DAY_TO_MINUTES_FACTOR = 1440
 HOUR_TO_MINUTE_FACTOR = 60
+MINUTE_TO_SECOND_FACTOR = 60
 SECOND_TO_MINUTE_FACTOR = 1/60
 MINUTE_TO_HOUR_FACTOR = 1/60
 
@@ -48,6 +49,13 @@ def datetimes_to_time_slots(t1: datetime, t2:
     minutes = seconds_to_minutes(seconds)
     booking_slots = minutes_to_time_slots(minutes)
     return booking_slots
+
+
+def _round_up_to_next_15_minutes(d: datetime) -> datetime:
+    approx = round(d.minute / SMALLEST_TIME_UNIT) * SMALLEST_TIME_UNIT
+    d = d.replace(minute=0)
+    d += datetime.timedelta(seconds=approx * MINUTE_TO_SECOND_FACTOR)
+    return d
 
 
 def current_time() -> datetime:
