@@ -24,6 +24,7 @@ class Booking:
         self.allow_car_pooling = allow_car_pooling
         # Tags attached to booking
         self.tags = []
+        self.minutes_late = 0
 
     def set_start_time(self, start_time: str) -> None:
         self.start_time = datetime(start_time)
@@ -58,7 +59,9 @@ class BookingSystem:
         return id_
 
     def close_booking(self, booking_id: str, handover_time: str):
-        pass
+        booking = self.__bookings[booking_id]
+        end_time = booking.end_time
+        handover_time = datetime(handover_time)
 
     def delete_booking(self, id_: str) -> None:
         del self.__bookings[id_]
