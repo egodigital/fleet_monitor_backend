@@ -3,7 +3,7 @@ This module contains all assumptions we as team
 FleetMonitor make about the system.
 """
 
-from math import exp
+import math
 
 # --- Globals concering cars
 
@@ -42,23 +42,25 @@ FEATURE_DISCOVERY_MAX = 10
 PRICE_SURPLUS_OF_NO_CARPOOLING_RIDES = 0.2
 
 # unit [cents]
-_DISTANCE_PRICE_FACTOR = 0.5
+_DISTANCE_PRICE_FACTOR = 0.05
 # unit [cents]
-_TIME_SLOT_PRICE_FACTOR = 0.01
+_TIME_SLOT_PRICE_FACTOR = 2
 # unit [cents]
 _BONUS_POINT_PRICE_FACTOR = 0.2
 
 
 def _DISTANCE_COST(distance):
-    return _DISTANCE_PRICE_FACTOR * distance
+    return round(_DISTANCE_PRICE_FACTOR * distance)
 
 
 def _TIME_COST(amount_time_slots):
-    return _TIME_SLOT_PRICE_FACTOR * exp(amount_time_slots)
+    def sigmoid(x):
+        return 1 / (1 + math.exp(-x))
+    return round(_TIME_SLOT_PRICE_FACTOR * sigmoid(amount_time_slots))
 
 
 def BASE_PRICE(distance, amount_time_slots):
-    return _DISTANCE_COST(distance) + _TIME_COST(amount_time_slots)
+    return round(_DISTANCE_COST(distance) + _TIME_COST(amount_time_slots))
 
 
 def BONUS_POINT_PRICE_DISCOUNT(bonus_points):
